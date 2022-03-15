@@ -1,0 +1,14 @@
+.Report7_Wrapper .Selectors_Wrapper {
+    display: grid;
+    grid-template-columns: auto 140px 170px 1fr 300px;
+    grid-gap: 20px;
+}
+
+.ButtonsWrapper {
+    position: sticky;
+    right: 0;
+    top: 80px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}

@@ -1,0 +1,23 @@
+{
+  "loading": "Loading...",
+  "goTop": "Go Top",
+  "back": "Back",
+  "login": {
+    "title": "Authentication",
+    "sign": "Sign in",
+    "password": "Password",
+    "login": "Login"
+  },
+  "menu": {
+    "title": "Menu",
+    "umk": "Report",
+    "empty": "Empty"
+  },
+  "selector": {
+    "chooseSeason": "Choose semester",
+    "chooseYear": "Choose year",
+    "FallSemester": "Fall semester",
+    "SpringSemester": "Spring semester",
+    "SummerSemester": "Summer semester"
+  }
+}

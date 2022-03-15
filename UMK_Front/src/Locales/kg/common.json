@@ -1,0 +1,24 @@
+{
+  "loading": "Жүктөө...",
+  "goTop": "Жогоруга чыгуу",
+  "back": "Артка",
+  "login": {
+    "title": "Кирүү бети",
+    "sign": "Кирүү",
+    "password": "Сырсөз",
+    "login": "Логин"
+  },
+  "menu": {
+    "title": "Меню УМК",
+    "home": "Башкы бет",
+    "umk": "Отчет УМК",
+    "empty": "Бош бет"
+  },
+  "selector": {
+    "chooseSeason": "Семестр тандаңыз",
+    "chooseYear": "Жыл тандаңыз",
+    "FallSemester": "Күзгү семестр",
+    "SpringSemester": "Жазгы семестр",
+    "SummerSemester": "Жайкы семестр"
+  }
+}

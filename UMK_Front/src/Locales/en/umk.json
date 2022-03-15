@@ -1,0 +1,14 @@
+{
+    "login": {
+      "auth": "Авторизация"
+    },
+    "profile": {
+      "profile": "Профиль",
+      "oldPassword": "Старый пароль",
+      "newPassword": "Новый пароль",
+      "confirmPassword": "Новый пароль (повторите)",
+      "save": "Сохранить",
+      "changePassword": "Изменить пароль"
+    }
+  }
+  
