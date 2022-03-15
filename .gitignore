@@ -1,3 +1,10 @@
 \node_modules
 UMK_Backend\node_modules
 UMK_Front\node_modules
+*.rar
+*.zip
+*.7z
+*.iso
+*.dmg
+*.exe
+*.msi
