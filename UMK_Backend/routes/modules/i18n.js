@@ -7,8 +7,15 @@ i18next
   .use(i18nextMiddleware.LanguageDetector)
   .init({
     backend: {
-      loadPath: __dirname + "/routes/locales/{{lng}}/{{ns}}.json",
+      loadPath: __dirname + "..\\locales\\{{lng}}\\{{ns}}.json",
     },
+    // defaultNS: "translation",
+    detection: {
+        order: ["querystring", "cookie"],
+        cache: ["cookie"],
+        lookupQuerystring: "lang",
+        lookupCookie: "lang",
+      },
     fallbackLng: "ru",
     preload: ["ru"],
   });
