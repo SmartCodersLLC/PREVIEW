@@ -48,9 +48,6 @@ app.use(`/${appUrl}/public`, express.static(path.join(__dirname, "public")));
 
 app.all("/", async function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
-  console.log("hello", req.i18n.t("hello"))
-  // console.log("hello", req.t, req.i18n)
-
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

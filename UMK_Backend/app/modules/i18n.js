@@ -1,25 +1,39 @@
 const i18next = require("i18next");
 const Backend = require("i18next-node-fs-backend");
-const i18nextMiddleware = require("i18next-express-middleware");
+const middleware = require("i18next-http-middleware");
+
+const commonTranslationRU = require("../locales/ru/translation.json");
+const commonTranslationKG = require("../locales/kg/translation.json");
+const commonTranslationEN = require("../locales/en/translation.json");
+
+const resources = {
+  ru: {
+    translation: commonTranslationRU,
+  },
+  kg: {
+    translation: commonTranslationKG,
+  },
+  en: {
+    translation: commonTranslationEN,
+  },
+};
 
 i18next
   .use(Backend)
-  .use(i18nextMiddleware.LanguageDetector)
+  .use(middleware.LanguageDetector)
   .init({
-    backend: {
-      loadPath: __dirname + "..\\locales\\{{lng}}\\{{ns}}.json",
-    },
-    // defaultNS: "translation",
+    resources,
+    defaultNS: "translation",
     detection: {
-        order: ["querystring", "cookie"],
-        cache: ["cookie"],
-        lookupQuerystring: "lang",
-        lookupCookie: "lang",
-      },
+      order: ["querystring", "cookie"],
+      cache: ["cookie"],
+      lookupQuerystring: "lang",
+      lookupCookie: "lang",
+    },
     fallbackLng: "ru",
     preload: ["ru"],
   });
 
-const translator = i18nextMiddleware.handle(i18next);
+const translator = middleware.handle(i18next);
 
 module.exports = translator;
