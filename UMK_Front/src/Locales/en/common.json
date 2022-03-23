@@ -2,6 +2,11 @@
   "loading": "Loading...",
   "goTop": "Go Top",
   "back": "Back",
+  "axios": {
+    "unknownError": "Неизвестная ошибка интернет соединения",
+    "internetError": "Ошибка интернет соединения, проверьте подключение к интернету",
+    "sessionExpired": "Ваша сессия истекла. Пожалуйста, войдите в систему заново."
+  },
   "login": {
     "title": "Authentication",
     "sign": "Sign in",

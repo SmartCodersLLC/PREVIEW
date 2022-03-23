@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useSetRecoilState } from "recoil";
 
 import TopButton from "../Components/TopButton";
@@ -11,11 +12,20 @@ import { routes } from "./routes";
 
 export default function IndexPage() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const setUser = useSetRecoilState(userState);
   const [Loading, setLoading] = useState(true);
   const routesList = useRoutes(routes);
 
   useEffect(() => {
+    http.interceptors.request.use((config) => {
+      config.params = {
+        ...config.params,
+        lang: i18n.language,
+      };
+      return config;
+    });
+
     http.interceptors.response.use(
       (response) => {
         const data = { ...response.data, status: response.status };
@@ -29,14 +39,14 @@ export default function IndexPage() {
             return {
               status: 521,
               message:
-                "Ошибка интернет соединения, проверьте подключение к интернету",
+              t("axios.internetError"),
               error: true,
               data: null,
             };
           }
           return {
             status: 522,
-            message: "Неизвестная ошибка интернет соединения",
+            message: t("axios.unknownError"),
             error: true,
             data: null,
           };
@@ -51,7 +61,7 @@ export default function IndexPage() {
 
           if (error?.response?.config?.url?.includes("auth/check") === false) {
             // user is not on login page and not on auth/check , session is expired when user is working
-            notify("Срок сессии истек, пожалуйста авторизуйтесь", "error");
+            notify(t("axios.sessionExpired"), "error");
             throw "Срок сессии истек!";
           }
 
@@ -79,7 +89,7 @@ export default function IndexPage() {
   }, []);
 
   if (Loading) {
-    return <div>Загрузка...</div>;
+    return <div>{t("loading")}</div>;
   }
   return (
     <div className="Page" id="Page">
