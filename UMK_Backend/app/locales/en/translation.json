@@ -1,1 +1,11 @@
-{ "hello": "hello" }
+{
+  "auth": {
+    "inValidFormat": "Invalid format",
+    "welcome": "Welcome!",
+    "inValidAuth": "Incorrect username or password",
+    "failLoginError": "Failed to log in error,  {{error}}",
+    "failLogoutError": "Failed tp log out error, {{error}}",
+    "loggedOut": "You are logged out",
+    "inputAuth": "Please input username and password"
+  }
+}

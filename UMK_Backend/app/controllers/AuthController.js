@@ -15,7 +15,7 @@ class AuthController {
       const isValid = v.validate(req.body, loginSchema).valid;
       console.log(isValid, req.body);
       if (!isValid) {
-        return send(res, false, `Неверный формат данных!`, true, 400);
+        return send(res, false, req.t("auth.inValidFormat"), true, 400);
       }
       const { login, password } = req.body;
       const cryptoPass = md5(password);
@@ -27,7 +27,7 @@ class AuthController {
       console.log(pool);
       // if connectWithLogin failed
       if (pool == false) {
-        return send(res, false, `Неверный логин или пароль!`, true, 401);
+        return send(res, false, req.t("auth.inValidAuth"), true, 401);
       }
 
       const ID_PROG_ID = process.env.ID_PROG_ID;
@@ -56,14 +56,14 @@ class AuthController {
           return send(
             res,
             { id_role, id_avn_user, id_user },
-            `Добро пожаловать!`
+            req.t("auth.welcome")
           );
         }
       }
-      return send(res, false, `Неверный логин или пароль!`, true, 401);
+      return send(res, false, req.t("auth.inValidAuth"), true, 401);
     } catch (err) {
       console.log(err);
-      return send(res, false, `Не удалось войти, ${err.message}`, true, 500);
+      return send(res, false, req.t("auth.failLoginError", {error :err.message }), true, 500);
     }
   }
   // Оброботчик запроса для аутентификации
@@ -72,13 +72,13 @@ class AuthController {
       const IsAuthenticated = await COOKIE.CHECK_PERM(req, res);
       if (IsAuthenticated) {
         const user = await COOKIE.GET_USER(req);
-        return send(res, user, `Добро пожаловать!`);
+        return send(res, user, req.t("auth.welcome"));
       } else {
-        return send(res, false, `Введите логин и пароль!`, true, 401);
+        return send(res, false, req.t("auth.inputAuth"), true, 401);
       }
     } catch (err) {
       console.log(err);
-      return send(res, false, `Не удалось войти, ${err.message}`, true, 500);
+      return send(res, false, req.t("auth.failLoginError", {error :err.message }), true, 500);
     }
   }
   // Оброботчик запроса для выхода
@@ -86,11 +86,11 @@ class AuthController {
     try {
       const IsLogOut = await COOKIE.LOGOUT(req, res);
       res.clearCookie(COOKIE.COOKIE_NAME);
-      return send(res, true, `Вы вышли!`);
+      return send(res, true, req.t("auth.loggedOut"));
     } catch (err) {
       console.log(err);
       res.clearCookie(COOKIE.COOKIE_NAME);
-      return send(res, false, `Не удалось выйти, ${err.message}`, true, 500);
+      return send(res, false, req.t("auth.failLogoutError", {error :err.message }), true, 500);
     }
   }
 }

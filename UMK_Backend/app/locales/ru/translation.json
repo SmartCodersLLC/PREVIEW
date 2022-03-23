@@ -1,3 +1,11 @@
 {
-    "hello":"Привет"
+  "auth": {
+    "inValidFormat": "Неверный формат данных",
+    "welcome": "Добро пожаловать!",
+    "inValidAuth": "Неверный логин или пароль!",
+    "failLoginError": "Не удалось войти, {{error}}",
+    "failLogoutError": "Не удалось выйти, {{error}}",
+    "loggedOut": "Вы вышли!",
+    "inputAuth": "Введите логин и пароль!"
+  }
 }
