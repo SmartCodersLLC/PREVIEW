@@ -5,23 +5,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./language.module.css";
-
-function setCookie(name, value, days) {
-  var expires = "";
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = "; expires=" + date.toUTCString();
-  }
-  document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
+import { setCookie, setLocalStorage } from "../../Service/storage";
 
 export default function Language() {
   const { t, i18n } = useTranslation();
   const changeLanguage = (language) => {
     i18n.changeLanguage(language);
-    window.localStorage.setItem("lang", language);
-    setCookie("lang", language, 7);
+    setLocalStorage("lang", language);
+    setCookie("lang", language);
   };
   return (
     <div className={styles.list}>
