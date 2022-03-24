@@ -13,7 +13,6 @@ class AuthController {
     try {
       const v = new Validator();
       const isValid = v.validate(req.body, loginSchema).valid;
-      console.log(isValid, req.body);
       if (!isValid) {
         return send(res, false, req.t("auth.inValidFormat"), true, 400);
       }
@@ -24,8 +23,7 @@ class AuthController {
         ? await poolPromise()
         : await connectWithLogin(login, cryptoPass);
 
-      console.log(pool);
-      // if connectWithLogin failed
+       // if connectWithLogin failed
       if (pool == false) {
         return send(res, false, req.t("auth.inValidAuth"), true, 401);
       }
@@ -36,8 +34,7 @@ class AuthController {
         .input("password", sql.NVarChar, cryptoPass)
         .input("prog", sql.VarChar, ID_PROG_ID)
         .execute(`SP_AVN_Login`);
-      console.log(recordsets);
-
+ 
       if (
         recordsets &&
         recordsets.length &&
