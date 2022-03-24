@@ -5,14 +5,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./language.module.css";
-import { setCookie, setLocalStorage } from "../../Service/storage";
+import { StorageService } from "../../Service/storage";
 
 export default function Language() {
   const { t, i18n } = useTranslation();
   const changeLanguage = (language) => {
     i18n.changeLanguage(language);
-    setLocalStorage("lang", language);
-    setCookie("lang", language);
+    StorageService.setLocalStorage("lang", language);
+    StorageService.setCookie("lang", language);
   };
   return (
     <div className={styles.list}>
