@@ -7,9 +7,27 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:3150/avnumk/api/v1/select/year HTTP/1.1
+POST http://localhost:3150/avnumk/api/v1/select/year/default HTTP/1.1
+content-type: application/json
+
+ 
+###
+POST http://localhost:3150/avnumk/api/v1/select/year/list HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:3150/avnumk/api/v1/select/kafedra/list HTTP/1.1
 content-type: application/json
 
 {
-    "year": "012"
+    "year": 15
+}
+
+###
+POST http://localhost:3150/avnumk/api/v1/umk/list HTTP/1.1
+content-type: application/json
+
+{
+    "year": 15,
+    "kafedra": 5
 }

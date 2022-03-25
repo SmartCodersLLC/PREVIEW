@@ -1,33 +1,36 @@
 const { sql, poolPromise } = require("../DB.js");
 const COOKIE = require("../cookies.js");
-
+const send = require("../modules/send");
+const validate = require("../modules/validator");
+const { Validator } = require("jsonschema");
+const { listSchema } = require("../schemas/UMKSchema");
 
 class UMKController {
+  // список умк по дисциплинам
+  async list(req, res) {
+    try {
+      const isValid = validate(req.body, listSchema);
+      if (!isValid) {
+        return send(res, false, req.t("inValidFormat"), true, 400);
+      }
+      const { year, kafedra } = req.body;
+      const queryText = `EXEC SP_RS_LMS_umk_kafedra_exist @year=${year}, @kafedra=${kafedra}`;
 
-    // Оброботчик запроса для получения данных
-    async getData(req, res) {
-        try {
-            const pool = await poolPromise();
-            const queryText = `
-                EXEC GetRRNKPermiss @id_a_year=${req.body.year}`
-            const result = await pool.query(queryText)
-            const resList = await result.recordset
-            resList.forEach(element => {
-                
-                const b = element.begDateStr.split(".").reverse().join("-")
-                element.begDate = DCdmy(b)
-                const f = element.endDateStr.split(".").reverse().join("-")
-                element.endDate = DCdmy(f)
-            });
-            return res.json({ status: 300, message: `yearList OK`, result: resList });
-        }
-        catch (err) {
-            console.log(err)
-            return res.json({ status: 1, message: `Неправильный запрос ${err.message}`, result: false });
-        }
+      const pool = await poolPromise();
+      let r = await pool.query(queryText);
+      let data = r.recordset;
+      return send(res, data, req.t("selector.kafedraListOK"));
+    } catch (err) {
+      console.log(err);
+      return send(
+        res,
+        false,
+        req.t("errorQuery", { error: err.message }),
+        true,
+        500
+      );
     }
-
+  }
 }
-
 
 module.exports = new UMKController();

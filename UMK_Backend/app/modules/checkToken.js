@@ -14,7 +14,7 @@ async function checkToken(req, res, next) {
     if (IsAuthenticated) {
       next();
     } else {
-      return send(res, false, "Необходима авторизация!", true, 401);
+        return send(res, false, req.t("token.noAuth"), true, 401);
     }
   }
 }

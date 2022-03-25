@@ -1,6 +1,5 @@
 require("dotenv").config();
-const { Validator } = require("jsonschema");
-
+const validate = require("../modules/validator");
 const send = require("../modules/send");
 const { md5 } = require("../modules/utils");
 const { loginSchema } = require("../schemas/AuthSchema");
@@ -11,8 +10,7 @@ class AuthController {
   // Оброботчик запроса для авторизации
   async login(req, res) {
     try {
-      const v = new Validator();
-      const isValid = v.validate(req.body, loginSchema).valid;
+      const isValid = validate(req.body, loginSchema);
       if (!isValid) {
         return send(res, false, req.t("auth.inValidFormat"), true, 400);
       }
@@ -23,7 +21,7 @@ class AuthController {
         ? await poolPromise()
         : await connectWithLogin(login, cryptoPass);
 
-       // if connectWithLogin failed
+      // if connectWithLogin failed
       if (pool == false) {
         return send(res, false, req.t("auth.inValidAuth"), true, 401);
       }
@@ -34,7 +32,7 @@ class AuthController {
         .input("password", sql.NVarChar, cryptoPass)
         .input("prog", sql.VarChar, ID_PROG_ID)
         .execute(`SP_AVN_Login`);
- 
+
       if (
         recordsets &&
         recordsets.length &&
@@ -60,7 +58,13 @@ class AuthController {
       return send(res, false, req.t("auth.inValidAuth"), true, 401);
     } catch (err) {
       console.log(err);
-      return send(res, false, req.t("auth.failLoginError", {error :err.message }), true, 500);
+      return send(
+        res,
+        false,
+        req.t("auth.failLoginError", { error: err.message }),
+        true,
+        500
+      );
     }
   }
   // Оброботчик запроса для аутентификации
@@ -75,7 +79,13 @@ class AuthController {
       }
     } catch (err) {
       console.log(err);
-      return send(res, false, req.t("auth.failLoginError", {error :err.message }), true, 500);
+      return send(
+        res,
+        false,
+        req.t("auth.failLoginError", { error: err.message }),
+        true,
+        500
+      );
     }
   }
   // Оброботчик запроса для выхода
@@ -87,7 +97,13 @@ class AuthController {
     } catch (err) {
       console.log(err);
       res.clearCookie(COOKIE.COOKIE_NAME);
-      return send(res, false, req.t("auth.failLogoutError", {error :err.message }), true, 500);
+      return send(
+        res,
+        false,
+        req.t("auth.failLogoutError", { error: err.message }),
+        true,
+        500
+      );
     }
   }
 }
