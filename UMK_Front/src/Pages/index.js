@@ -1,13 +1,14 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { useRoutes, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState } from "recoil";
 
 import TopButton from "../Components/TopButton";
 import { http, appName } from "../Service/http";
 import { notify } from "../Utils/notify";
 import { AuthService } from "../Service/auth";
 import { userState } from "../State/user";
+import { numberOfAxiosCallState } from "../State/loader";
 import { routes } from "./routes";
 
 export default function IndexPage() {
@@ -15,31 +16,47 @@ export default function IndexPage() {
   const { t, i18n } = useTranslation();
   const setUser = useSetRecoilState(userState);
   const [Loading, setLoading] = useState(true);
+  const [calls, setCalls] = useRecoilState(numberOfAxiosCallState);
   const routesList = useRoutes(routes);
 
   useEffect(() => {
-    http.interceptors.request.use((config) => {
-      config.params = {
-        ...config.params,
-        lang: i18n.language,
-      };
-      return config;
-    });
+    http.interceptors.request.use(
+      (config) => {
+        setCalls(calls + 1);
+        console.log("setCalls request", calls);
+
+        config.params = {
+          ...config.params,
+          lang: i18n.language,
+        };
+        return config;
+      },
+      (error) => {
+        // setCalls(calls - 1);
+        console.log("error setCalls request");
+        console.log(error);
+        return Promise.reject(error);
+      }
+    );
 
     http.interceptors.response.use(
       (response) => {
+        setCalls(calls - 1);
+        console.log("setCalls response", calls);
+
         const data = { ...response.data, status: response.status };
         return data;
       },
       (error) => {
+        // setCalls(calls - 1);
+        console.log("error setCalls response", calls);
         if (error.response === undefined) {
           // server is not responding
           let errorObject = JSON.parse(JSON.stringify(error));
           if (errorObject.status === null) {
             return {
               status: 521,
-              message:
-              t("axios.internetError"),
+              message: t("axios.internetError"),
               error: true,
               data: null,
             };

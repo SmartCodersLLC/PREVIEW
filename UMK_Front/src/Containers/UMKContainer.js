@@ -2,17 +2,36 @@ import React, { useEffect, useState, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Select from "react-select";
+import { NavLink } from "react-router-dom";
+import {
+  groupBy,
+  map,
+  get,
+  isEmpty,
+  find,
+  filter,
+  has,
+  debounce,
+  chain,
+  sortBy,
+} from "lodash";
+
+import { notify } from "../Utils/notify";
+import { nestGroupsBy } from "../Utils/group";
 import { userState } from "../State/user";
 import {
   yearListState,
   defaultYearState,
   selectedYearState,
 } from "../State/year";
-import { wsListState, defaultWsState, selectedWsState } from "../State/ws";
+import { kafedraListState, selectedKafedraState } from "../State/kafedra";
+import { umkListState } from "../State/umk";
+import { numberOfAxiosCallState } from "../State/loader";
 
 import { appName } from "../Service/http";
-import Select from "react-select";
-import { NavLink } from "react-router-dom";
+import { SelectorService } from "../Service/selector";
+import { UMKService } from "../Service/umk";
 
 import "../Styles/Report7.css";
 
@@ -22,15 +41,90 @@ export function UMKContainer() {
   const [user, setUser] = useRecoilState(userState);
   const [yearList, setYearList] = useRecoilState(yearListState);
   const [year, setYear] = useRecoilState(selectedYearState);
-  const [wsList, setWsList] = useRecoilState(wsListState);
-  const [ws, setWS] = useRecoilState(selectedWsState);
+  const [kafedraList, setKafedraList] = useRecoilState(kafedraListState);
+  const [kafedra, setKafedra] = useRecoilState(selectedKafedraState);
+  const [umkList, setUmkList] = useRecoilState(umkListState);
+  const [calls, setCalls] = useRecoilState(numberOfAxiosCallState);
 
   const handleYear = (selected) => {
     setYear(selected);
   };
-  const handleWs = (selected) => {
-    setWS(selected);
+  const handleKafedra = (selected) => {
+    setKafedra(selected);
   };
+
+  const getKafedraList = async () => {
+    const { data, status, message, error } = await SelectorService.kafedraList({
+      year: year.value,
+    });
+    if (error) {
+      notify(message, "error");
+    } else {
+      const kafedraList = data.map(({ id_kafedra, name }) => ({
+        value: id_kafedra,
+        label: name,
+      }));
+      setKafedraList(kafedraList);
+    }
+  };
+
+  const getUmkList = async () => {
+    if (!year.value || !kafedra.value) {
+      return;
+    }
+    const { data, status, message, error } = await UMKService.list({
+      year: year.value,
+      kafedra: kafedra.value,
+    });
+    if (error) {
+      notify(message, "error");
+    } else {
+      const grouped = nestGroupsBy(data, ["rate", "p34", "s_t_fio", "umkName"]);
+      console.log({ data });
+      console.log({ grouped });
+
+      let result = chain(data)
+        .groupBy((x) => x.rate)
+        // .sortBy((rate) => data.indexOf(rate))
+        .map((rates, key) => ({
+          rate_name: key,
+          rates: chain(rates)
+            // .sortBy((rates) => ["p34"])
+            .groupBy((y) => y.p34)
+            .map((disciplines, key) => ({
+              discipline_name: key,
+              disciplines: chain(disciplines)
+                .groupBy((z) => z.s_t_fio)
+                // .sortBy((s_t_fio) => data.indexOf(s_t_fio[0]))
+                .map((teachers, key) => ({
+                  student_name: key,
+                  teachers: chain(teachers)
+                    .groupBy((w) => w.umkName)
+                    // .sortBy((umkName) => data.indexOf(umkName[0]))
+                    .map((umks, key) => ({
+                      umk_name: key,
+                      umks: umks,
+                    }))
+                    .value(),
+                }))
+                .value(),
+            }))
+            .value(),
+        }))
+        .value();
+
+      console.log({ result });
+      setUmkList(grouped);
+    }
+  };
+
+  useEffect(() => {
+    getKafedraList();
+  }, [year]);
+
+  useEffect(() => {
+    getUmkList();
+  }, [kafedra]);
 
   return (
     <div className="Report7_Wrapper">
@@ -52,27 +146,27 @@ export function UMKContainer() {
         <Select
           className="Select"
           classNamePrefix="my_select"
-          value={ws}
+          value={kafedra}
           isSearchable={false}
           placeholder={t("selector.chooseSeason")}
-          onChange={handleWs}
-          options={wsList?.map((d) => {
+          onChange={handleKafedra}
+          options={kafedraList?.map((d) => {
             return { value: d.value, label: t(d.label) };
           })}
         />
       </div>
 
       <div className="A4" id="A4">
-        <h4>конкурс</h4>
+        <h4>конкурс calls={calls}</h4>
 
         <table>
-          <thead>
+          {/* <thead>
             <tr>
               <th>№</th>
               <th>Шифр</th>
               <th>Средний балл</th>
             </tr>
-          </thead>
+          </thead> */}
         </table>
       </div>
     </div>
