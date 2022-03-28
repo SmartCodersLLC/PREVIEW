@@ -15,6 +15,7 @@ import {
   debounce,
   chain,
   sortBy,
+  orderBy,
 } from "lodash";
 
 import { notify } from "../Utils/notify";
@@ -32,7 +33,7 @@ import { numberOfAxiosCallState } from "../State/loader";
 import { appName } from "../Service/http";
 import { SelectorService } from "../Service/selector";
 import { UMKService } from "../Service/umk";
-
+import TRWrapper from "../Components/Table/TRWrapper";
 import "../Styles/Report7.css";
 
 export function UMKContainer() {
@@ -45,7 +46,7 @@ export function UMKContainer() {
   const [kafedra, setKafedra] = useRecoilState(selectedKafedraState);
   const [umkList, setUmkList] = useRecoilState(umkListState);
   const [calls, setCalls] = useRecoilState(numberOfAxiosCallState);
-
+  const [docTypes, setTypes] = useState([]);
   const handleYear = (selected) => {
     setYear(selected);
   };
@@ -80,41 +81,57 @@ export function UMKContainer() {
       notify(message, "error");
     } else {
       const grouped = nestGroupsBy(data, ["rate", "p34", "s_t_fio", "umkName"]);
+      const filteredData = data.filter(({ umkName }) => umkName !== null);
+      const types = [...new Set(filteredData.map((item) => item.umkName))];
+      let sortedTypes = sortBy(types, ["asc"]);
       console.log({ data });
-      console.log({ grouped });
+      // console.log({ grouped });
+      console.log({ types });
+      setTypes(sortedTypes);
+      // let filteredData = chain(data).filter(({ umkName }) => umkName !== null);
 
-      let result = chain(data)
-        .groupBy((x) => x.rate)
-        // .sortBy((rate) => data.indexOf(rate))
-        .map((rates, key) => ({
-          rate_name: key,
-          rates: chain(rates)
-            // .sortBy((rates) => ["p34"])
-            .groupBy((y) => y.p34)
-            .map((disciplines, key) => ({
-              discipline_name: key,
-              disciplines: chain(disciplines)
-                .groupBy((z) => z.s_t_fio)
-                // .sortBy((s_t_fio) => data.indexOf(s_t_fio[0]))
-                .map((teachers, key) => ({
-                  student_name: key,
-                  teachers: chain(teachers)
-                    .groupBy((w) => w.umkName)
-                    // .sortBy((umkName) => data.indexOf(umkName[0]))
-                    .map((umks, key) => ({
-                      umk_name: key,
-                      umks: umks,
-                    }))
-                    .value(),
-                }))
-                .value(),
-            }))
-            .value(),
-        }))
-        .value();
+      let sortedData = sortBy(
+        filteredData,
+        ["rate", "p34", "s_t_fio", "umkName"],
+        ["asc", "asc", "asc", "asc"]
+      );
+      console.log({ sortedData });
+      let result =
+        // filter(data, function (o) {
+        //   return o.s_t_fio != null;
+        // })
+        chain(sortedData)
+          .groupBy((x) => x.rate)
+          // .sortBy((rate) => data.indexOf(rate))
+          .map((rates, key) => ({
+            rate_name: key,
+            rates: chain(rates)
+              // .sortBy((rates) => ["p34"])
+              .groupBy((y) => y.p34)
+              .map((disciplines, key) => ({
+                discipline_name: key,
+                disciplines: chain(disciplines)
+                  .groupBy((z) => z.s_t_fio)
+                  // .sortBy((s_t_fio) => data.indexOf(s_t_fio[0]))
+                  .map((teachers, key) => ({
+                    teacher_name: key,
+                    types: chain(teachers)
+                      .groupBy((w) => w.umkName)
+                      // .sortBy((umkName) => data.indexOf(umkName[0]))
+                      .map((umks, key) => ({
+                        umk_name: key,
+                        umks: umks,
+                      }))
+                      .value(),
+                  }))
+                  .value(),
+              }))
+              .value(),
+          }))
+          .value();
 
       console.log({ result });
-      setUmkList(grouped);
+      setUmkList(result);
     }
   };
 
@@ -160,13 +177,57 @@ export function UMKContainer() {
         <h4>конкурс calls={calls}</h4>
 
         <table>
-          {/* <thead>
+          <thead>
             <tr>
-              <th>№</th>
-              <th>Шифр</th>
-              <th>Средний балл</th>
+              <th width='5%'>Дисциплина</th>
+              <th>Преподаватель</th>
+              {docTypes.map((type) => (
+                <th key={type}>{type}</th>
+              ))}
             </tr>
-          </thead> */}
+          </thead>
+          <tbody>
+            {umkList?.map((rate) => (
+              <>
+                <tr key={rate.rate_name}>
+                  <td
+                    colSpan={2 + docTypes.length}
+                    style={{ textAlign: "left" }}
+                  >
+                    {rate.rate_name}
+                  </td>
+                </tr>
+                {rate.rates.map((discipline, dIndex) =>
+                  discipline.disciplines.map((teacher, tIndex) => (
+                    <>
+                      {tIndex == 0 && (
+                        <tr>
+                          <td rowSpan={discipline.disciplines.length + 1}>
+                            {discipline.discipline_name}
+                          </td>
+                        </tr>
+                      )}
+                      <TRWrapper index={tIndex}>
+                        <td>{teacher.teacher_name}</td>
+                        {docTypes.map((docType, docTypeIndex) => {
+                          let umk = teacher.types.filter(
+                            (t) => t.umk_name == docType
+                          )[0];
+                          if (umk)
+                            return (
+                              <td>
+                                  {umk.umks.length}
+                              </td>
+                            );
+                          else return <td>-</td>;
+                        })}
+                      </TRWrapper>
+                    </>
+                  ))
+                )}
+              </>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>
