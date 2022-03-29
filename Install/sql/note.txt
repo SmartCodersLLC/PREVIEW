@@ -1,1 +1,2 @@
 1.  доступ к проц. SP_RS_LMS_umk_kafedra_exist в программе AVN17  полььзователю o_dekanat
+2.  доступ к проц. SP_RS_LMS_umk_kafedra_exist_detail в программе AVN17  полььзователю o_dekanat

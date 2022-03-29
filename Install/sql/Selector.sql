@@ -14,4 +14,11 @@ GROUP BY kafedra.id_kafedra, kafedra.f1
 ORDER BY kafedra.f1
 
 --umk/list
-exec SP_RS_LMS_umk_kafedra_exist 21, 5
+EXEC SP_RS_LMS_umk_kafedra_exist @year=${year}, @kafedra=${kafedra},  @id_rate=${rate}
+
+--umk/detail
+EXEC SP_RS_LMS_umk_kafedra_exist_detail 
+                                @id_rate=${rate} , 
+                                @id_typeUmk=${id_typeUmk}, 
+                                @id_discipline=${id_discipline}, 
+                                @id_teacher=${id_teacher}
