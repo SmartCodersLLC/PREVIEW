@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { useRoutes, useNavigate } from "react-router-dom";
+import { useRoutes, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSetRecoilState, useRecoilState } from "recoil";
 
@@ -18,6 +18,7 @@ export default function IndexPage() {
   const [Loading, setLoading] = useState(true);
   const [calls, setCalls] = useRecoilState(numberOfAxiosCallState);
   const routesList = useRoutes(routes);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     http.interceptors.request.use(
@@ -99,7 +100,7 @@ export default function IndexPage() {
       } else {
         notify(message, "success");
         setUser({ isAuthenticated: true, data, isLoading: false });
-        // navigate(`${appName}/`);
+        navigate(`${pathname}`);
       }
       setLoading(false);
     });

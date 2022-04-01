@@ -10,12 +10,12 @@ const FOURTH_ID = (NOW % 100) - 1;
 const FIFTH_ID = NOW % 100;
 const SIXTH_ID = (NOW % 100) + 1;
 
-const FIRST_NAME = `${NOW - 4}`;
-const SECOND_NAME = `${NOW - 3}`;
-const THIRD_NAME = `${NOW - 2}`;
-const FOURTH_NAME = `${NOW - 1}`;
-const FIFTH_NAME = `${NOW}`;
-const SIXTH_NAME = `${NOW + 1}`;
+const FIRST_NAME = `${NOW - 4}-${NOW - 3}`;
+const SECOND_NAME = `${NOW - 3}-${NOW - 2}`;
+const THIRD_NAME = `${NOW - 2}-${NOW - 1}`;
+const FOURTH_NAME = `${NOW - 1}-${NOW}`;
+const FIFTH_NAME = `${NOW}-${NOW + 1}`;
+const SIXTH_NAME = `${NOW + 1}-${NOW + 2}`;
 
 const yearListDefault = [
   { value: FIRST_ID, label: FIRST_NAME },

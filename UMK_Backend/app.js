@@ -15,7 +15,7 @@ const indexRouter = require("./app/index");
 const appUrl = process.env.APP_URL;
 const appVersion = process.env.API_VERSION;
 
-app.use(logger("dev"));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -25,7 +25,9 @@ app.use(translator);
 if (process.env.NODE_ENV === "production") {
   console.debug("production ВСЕ OK");
   app.use(helmet());
+  app.use(logger("tiny"));
 } else {
+  app.use(logger("dev"));
   console.debug(
     "РЕЖИМ РАЗРАБОТКИ development ИЗМЕНИТЕ NODE_ENV В .env ФАЙЛЕ на production"
   );

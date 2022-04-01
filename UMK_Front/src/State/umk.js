@@ -10,3 +10,8 @@ export const selectedUmkState = atom({
   key: "selectedUmkState",
   default: null,
 });
+
+export const umkDetailListState = atom({
+  key: "umkDetailListState",
+  default: [],
+});

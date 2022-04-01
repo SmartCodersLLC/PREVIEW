@@ -2,6 +2,7 @@ import React from "react";
 import { MainPage } from "./MainPage";
 import { UMKPage } from "./UMKPage";
 import { LoginPage } from "./LoginPage";
+import { ViewPage } from "./ViewPage";
 import { appName } from "../Service/http";
 
 export const routes = [
@@ -17,10 +18,15 @@ export const routes = [
     children: [
       {
         path: `:id`,
-        element: <UMKPage />,
-        title: "УМК",
+        element: <ViewPage />,
+        title: "Просмотр документа",
       },
     ],
+  },
+  {
+    path: `${appName}/view`,
+    element: <ViewPage />,
+    title: "Просмотр документа",
   },
   {
     path: `${appName}/login`,

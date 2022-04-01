@@ -16,5 +16,7 @@ router.post("/select/year/list", checkToken, SelectorController.yearList);
 router.post("/select/kafedra/list", checkToken, SelectorController.kafedraList);
 
 router.post("/umk/list", checkToken, UMKController.list);
+router.post("/umk/detail", checkToken, UMKController.detail);
+
 
 module.exports = router;

@@ -15,6 +15,7 @@
     "npm": "^8.5.1",
     "pdfmake": "^0.2.4",
     "react": "^17.0.2",
+    "react-doc-viewer": "^0.1.5",
     "react-dom": "^17.0.2",
     "react-export-table-to-excel": "^1.0.3",
     "react-helmet-async": "^1.2.3",

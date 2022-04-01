@@ -1,6 +1,7 @@
 {
   "loading": "Loading...",
   "goTop": "Go Top",
+  "goDown": "Go Down",
   "back": "Back",
   "axios": {
     "unknownError": "Неизвестная ошибка интернет соединения",

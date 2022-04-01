@@ -1,5 +1,7 @@
-.Scroll_Top_button {
+.Scroll_Top_button,
+.Scroll_Down_button {
   position: fixed;
+  right: -10px;
   transform: translate(-50%, -50%);
   bottom: 10px;
   right: -10px;
@@ -10,10 +12,23 @@
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
-  z-index: 999999;
+  z-index: 111;
   border: none;
   box-shadow: 0px 2px 3px #0b1d3333;
   cursor: pointer;
   background-color: cornflowerblue;
   animation: ease-in-out 0.3s infinite alternate;
+}
+
+.Scroll_Top_button {
+  bottom: 50px;
+}
+.Scroll_Down_button {
+  bottom: 10px;
+}
+@media print {
+  .Scroll_Top_button,
+  .Scroll_Down_button {
+    display: none !important;
+  }
 }
