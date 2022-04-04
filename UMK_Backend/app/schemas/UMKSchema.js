@@ -16,5 +16,11 @@ const detailSchema = {
     id_teacher: { type: "number", required: true },
   },
 };
+const downloadSchema = {
+  type: "object",
+  properties: {
+    file: { type: "string", required: true },
+  },
+};
 
-module.exports = { listSchema, detailSchema };
+module.exports = { listSchema, detailSchema, downloadSchema };

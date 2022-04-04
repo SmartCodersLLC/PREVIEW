@@ -17,6 +17,7 @@ router.post("/select/kafedra/list", checkToken, SelectorController.kafedraList);
 
 router.post("/umk/list", checkToken, UMKController.list);
 router.post("/umk/detail", checkToken, UMKController.detail);
+router.get("/umk/download", checkToken, UMKController.download);
 
 
 module.exports = router;

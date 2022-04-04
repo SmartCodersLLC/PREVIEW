@@ -1,5 +1,6 @@
 \node_modules
 UMK_Backend\node_modules
+UMK_Backend\upload
 UMK_Front\node_modules
 *.rar
 *.zip
@@ -8,3 +9,10 @@ UMK_Front\node_modules
 *.dmg
 *.exe
 *.msi
+*.pkg
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+*.mp3
+*.mp4

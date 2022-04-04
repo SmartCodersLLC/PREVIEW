@@ -7,74 +7,88 @@ import { NavLink } from "react-router-dom";
 import { notify } from "../Utils/notify";
 import { userState } from "../State/user";
 
-import {
-  umkListState,
-  selectedUmkState,
-  umkDetailListState,
-} from "../State/umk";
-import { numberOfAxiosCallState } from "../State/loader";
-
-import { appName } from "../Service/http";
-import { SelectorService } from "../Service/selector";
-import { UMKService } from "../Service/umk";
-import TRWrapper from "../Components/Table/TRWrapper";
-import Modal from "../Components/Modal";
+import { baseURL } from "../Service/http";
 import Spinner from "../Components/Spinner";
 import "../Styles/UMKContainer.css";
-import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
+import FileViewer from "react-file-viewer";
 
 export function ViewContainer() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [user, setUser] = useRecoilState(userState);
 
-  const [umkList, setUmkList] = useRecoilState(umkListState);
-  const umkListReset = useResetRecoilState(umkListState);
-  const [umkDetailList, setUmkDetailList] = useRecoilState(umkDetailListState);
-  const umkDetailListReset = useResetRecoilState(umkDetailListState);
-  const [umkSelected, setUmkSelected] = useRecoilState(selectedUmkState);
-  const umkSelectedReset = useResetRecoilState(selectedUmkState);
+  const [filePath, setFilePath] = useState(null);
+  const [type, setType] = useState(null);
+  const [error, setError] = useState(null);
 
-  const defaultDocs = [
-    // { uri: "https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf" },
-    { uri: ".pdf" },
-  ];
-  const [docs, setDocs] = useState([]);
-  const [loading, setLoading] = useState(null);
+  function onErrorFun(error) {
+    console.log({ error });
+    notify(error.message, "error");
+    setError(error);
+  }
 
-  // return <DocViewer documents={docs} />;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file");
+    const type = params.get("type");
+    console.log({ file, type });
+    if (file && type) {
+      const url = `${baseURL}/umk/download?file=${encodeURIComponent(file)}`;
+      fetch(url)
+        .then((res) => {
+          if (res.status === 200) {
+            setFilePath(url);
+            setType(type);
+          } else {
+            res.json().then((data) => {
+              setError(data.message);
+            });
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          notify(error.message, "error");
+        });
+    } else {
+      setError("Не выбран документ");
+    }
+  }, []);
+
+  if (!filePath || !type) {
+    return (
+      <div>
+        <h1> Ошибка</h1>
+        <p>Файл не указан!</p>
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      View
-      {/* <DocViewer
-        pluginRenderers={[PDFRenderer, PNGRenderer]}
-        documents={docs}
-      /> */}
-      {/* <DocViewer pluginRenderers={DocViewerRenderers} documents={docs} /> */}
-      {/* <DocViewer  documents={docs} /> */}
+    <div className="UMKContainer">
+      <div className="A4" id="A4">
+        {error ? (
+          <>
+            <CustomErrorComponent error={error} />
+          </>
+        ) : (
+          <FileViewer
+            fileType={type}
+            filePath={filePath}
+            onError={onErrorFun}
+          />
+        )}
+      </div>
     </div>
   );
-  // return (
-  //   <div className="UMKContainer">
-  //     <div className="Selectors_Wrapper no-print">
-  //       <NavLink to="/avnumk/">
-  //         <button title={t("back")}>
-  //           <i className="fas fa-arrow-left"></i>
-  //         </button>
-  //       </NavLink>
+}
 
-  //       <div>
-  //         {loading ? (
-  //           <>
-  //             <Spinner size={"15px"} color={"blue"} />
-  //             {loading}
-  //           </>
-  //         ) : null}
-  //       </div>
-  //     </div>
-
-  //     <div className="A4" id="A4"></div>
-  //   </div>
-  // );
+function CustomErrorComponent({ error }) {
+  return (
+    <div>
+      <h1> Ошибка</h1>
+      <p> Файл не найден! </p>
+      <p> {error}</p>
+    </div>
+  );
 }

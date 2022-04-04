@@ -100,7 +100,7 @@ export default function IndexPage() {
       } else {
         notify(message, "success");
         setUser({ isAuthenticated: true, data, isLoading: false });
-        navigate(`${pathname}`);
+        navigate(`${pathname}${window.location.search}`);
       }
       setLoading(false);
     });

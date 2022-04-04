@@ -44,6 +44,7 @@ import TRWrapper from "../Components/Table/TRWrapper";
 import Modal from "../Components/Modal";
 import Spinner from "../Components/Spinner";
 import "../Styles/UMKContainer.css";
+import { baseURL } from "../Service/http";
 
 export function UMKContainer() {
   const { t } = useTranslation();
@@ -261,12 +262,46 @@ export function UMKContainer() {
     getUmkDetails(umk);
   };
 
+  const viewList = [
+    "csv",
+    "xlsx",
+    "jpg",
+    "jpeg",
+    "gif",
+    "gif",
+    "png",
+    "pdf",
+    "docx",
+    "mp3",
+    "webm",
+    "mp4",
+    "wexbim",
+  ];
+  const isAllowedView = (type) => {
+    return viewList.includes(type);
+  };
+
   const download = ({ id, name }) => {
-    const url = `/api/umk/download/${id}`;
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = name;
-    link.click();
+    const fileName = `${id}_${encodeURIComponent(name)}`;
+    const url = `${baseURL}/umk/download?file=${fileName}`;
+    window.open(url, "_blank");
+    // const link = document.createElement("a");
+    // link.href = url;
+    // link.download = name;
+    // link.click();
+  };
+  const view = ({ id, name }) => {
+    const type = mimeType(name);
+    if (!isAllowedView(type)) {
+      notify(t("report.notAllowedView"), "error");
+      return;
+    }
+    const fileName = `${id}_${encodeURIComponent(name)}`;
+    const url = `/avnumk/view?file=${fileName}&type=${type}`;
+    window.open(url, "_blank");
+  };
+  const mimeType = (name) => {
+    return name.split(".").pop();
   };
 
   useEffect(() => {
@@ -374,6 +409,8 @@ export function UMKContainer() {
                     <th>Описание</th>
                     <th>Семестр</th>
                     <th>Файл</th>
+                    <th>Скачать</th>
+                    <th>Посмотреть</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -383,8 +420,9 @@ export function UMKContainer() {
                       <td>{umkItem.name}</td>
                       <td>{umkItem.description}</td>
                       <td>{umkItem.p43}</td>
+                      <td>{umkItem.fileName}</td>
                       <td>
-                        <p
+                        <span
                           className="pointer"
                           title="Нажмите, чтобы скачать"
                           onClick={() =>
@@ -394,8 +432,26 @@ export function UMKContainer() {
                             })
                           }
                         >
-                          {umkItem.fileName} <i className="fas fa-download"></i>
-                        </p>
+                          <i className="fas fa-download"></i>
+                        </span>
+                      </td>
+
+                      <td>
+                        {isAllowedView(mimeType(umkItem.fileName)) ? (
+                          <span
+                            className="pointer"
+                            title="Нажмите, чтобы посмотреть"
+                            onClick={() =>
+                              view({
+                                id: umkItem.id,
+                                name: umkItem.fileName,
+                              })
+                            }
+                          >
+                            {" "}
+                            <i className="fas fa-eye"></i>
+                          </span>
+                        ) : null}
                       </td>
                     </tr>
                   ))}
