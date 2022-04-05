@@ -1,14 +1,22 @@
 {
-    "login": {
-      "auth": "Авторизация"
-    },
-    "profile": {
-      "profile": "Профиль",
-      "oldPassword": "Старый пароль",
-      "newPassword": "Новый пароль",
-      "confirmPassword": "Новый пароль (повторите)",
-      "save": "Сохранить",
-      "changePassword": "Изменить пароль"
+  "report": {
+    "noData": "Нет данных для отображения",
+    "kafedra": "Кафедра",
+    "rate": "Курс",
+    "discipline": "Дисциплина",
+    "teacher": "Преподаватель",
+    "table": {
+      "name": "Название",
+      "description": "Описание",
+      "semester": "Семестр",
+      "file": "Файл",
+      "download": "Скачать",
+      "view": "Посмотреть"
     }
+  },
+  "view": {
+    "noChoosen": "Не выбран документ",
+    "noFile": "Файл не указан!",
+    "notFound": "Файл не найден!"
   }
-  
+}

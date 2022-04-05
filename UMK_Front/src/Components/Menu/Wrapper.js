@@ -6,7 +6,7 @@ export default function MenuWrapper({ children }) {
   const { t } = useTranslation();
   return (
     <>
-      <h1 className={styles.title}>{t("menu.title")}</h1>
+      <h1 className={styles.title}>{t("head.menu")}</h1>
       <div className={styles.wrapper}>{children}</div>
     </>
   );

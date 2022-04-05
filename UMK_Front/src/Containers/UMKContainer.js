@@ -1,4 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
+
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
+
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -49,6 +53,7 @@ import { baseURL } from "../Service/http";
 export function UMKContainer() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const [user, setUser] = useRecoilState(userState);
 
   const [yearList, setYearList] = useRecoilState(yearListState);
@@ -72,7 +77,7 @@ export function UMKContainer() {
 
   const [calls, setCalls] = useRecoilState(numberOfAxiosCallState);
 
-  const [docTypes, setTypes] = useState([]);
+  const [docTypes, setDocTypes] = useState([]);
   const [loading, setLoading] = useState(null);
   const defaultSummary = { discipline: 0, teacher: "0/0" };
   const [summary, setSummary] = useState(defaultSummary);
@@ -80,7 +85,7 @@ export function UMKContainer() {
   const [isOpen, setIsOpen] = useState(false);
 
   const summaryReset = () => setSummary(defaultSummary);
-  const docTypesReset = () => setTypes([]);
+  const docTypesReset = () => setDocTypes([]);
 
   const handleYear = (selected) => {
     setYear(selected);
@@ -137,15 +142,15 @@ export function UMKContainer() {
       // Ошибка при получении списка УМК
       notify(message, "error");
       setUmkList([]);
-      setTypes([]);
+      setDocTypes([]);
       return;
     }
 
     if (data?.length === 0) {
       // Если нет данных по дисциплинам и преподавателям, то выводим пустую таблицу
-      notify(t("report.noData"), "error");
+      notify(t("umk:report.noData"), "error");
       setUmkList([]);
-      setTypes([]);
+      setDocTypes([]);
       return;
     }
     setLoading("Идет группировка УМК...");
@@ -200,8 +205,7 @@ export function UMKContainer() {
       }, 0);
       summaryTypes[type] = summa;
     });
-
-    setTypes(types);
+    setDocTypes(types);
 
     // Количество преподавателей  уникальных по дисциплине
     const uniqueTeacherPerDiscipline = umkGrouped
@@ -243,7 +247,7 @@ export function UMKContainer() {
     }
     if (status === 404) {
       // Если нет данных по дисциплинам и преподавателям, то выводим пустую таблицу
-      notify(t("report.noData"), "error");
+      notify(t("umk:report.noData"), "error");
       setUmkDetailList([]);
       return;
     }
@@ -255,7 +259,6 @@ export function UMKContainer() {
   };
 
   const selectUMK = (umk) => {
-    console.log({ umk });
     umkDetailListReset();
     setIsOpen(true);
     setUmkSelected(umk);
@@ -285,23 +288,110 @@ export function UMKContainer() {
     const fileName = `${id}_${encodeURIComponent(name)}`;
     const url = `${baseURL}/umk/download?file=${fileName}`;
     window.open(url, "_blank");
-    // const link = document.createElement("a");
-    // link.href = url;
-    // link.download = name;
-    // link.click();
   };
   const view = ({ id, name }) => {
-    const type = mimeType(name);
-    if (!isAllowedView(type)) {
-      notify(t("report.notAllowedView"), "error");
-      return;
-    }
     const fileName = `${id}_${encodeURIComponent(name)}`;
+    const type = mimeType(fileName);
     const url = `/avnumk/view?file=${fileName}&type=${type}`;
     window.open(url, "_blank");
   };
   const mimeType = (name) => {
     return name.split(".").pop();
+  };
+
+  const printList = () => {
+    if (kafedra.value && rate.value && year.value) {
+      window.print();
+    } else {
+      notify(t("umk:report.noData"), "error");
+    }
+  };
+
+  const printDetail = () => {
+    if (umkSelected) {
+      const documentPrintWindow = document.getElementById("printWindow");
+      if (documentPrintWindow) {
+        document.body.removeChild(documentPrintWindow);
+      }
+      const printWindow = document.createElement("iframe");
+      printWindow.style.position = "absolute";
+      printWindow.style.top = "-1000px";
+      printWindow.style.left = "-1000px";
+      printWindow.id = "printWindow";
+
+      const html = `<html><head><title>${t("head.umk")}</title></head><body>
+        <style>
+        h5 {
+          text-align: center;
+          margin: 0;
+          margin-bottom: 20px;
+          font-size: 18px;
+        }
+        table {
+          border-collapse: collapse;
+          background-color: #fff;
+          width: 100%;
+          font-size: 14px;
+        }
+        td.break {
+          float: left;
+          line-height: 22px;
+        }
+        td,
+        th {
+          padding: 5px 10px;
+          height: 35px;
+          border: 1px solid #606060 !important;
+        }
+        table thead tr, table tbody td, small {
+          color: black !important;
+        }
+        .no-print,
+        .no-print-child,
+        .no-print-child * {
+          display: none !important;
+        }
+        p {
+          margin: 0;
+          padding: 5px;
+        }
+        .text-center {
+          text-align: center;
+        }
+        .text-left {
+          text-align: left;
+        }
+        .text-right {
+          text-align: right;
+        }
+        </style>
+        ${document.getElementById("modalDetail").innerHTML}
+        </body></html>`;
+
+      document.body.appendChild(printWindow);
+      printWindow.contentWindow.document.open();
+      printWindow.contentWindow.document.write(html);
+      printWindow.contentWindow.document.close();
+      printWindow.contentWindow.print();
+    } else {
+      notify(t("umk:report.noData"), "error");
+    }
+  };
+
+  const exportList = (idTable, fileName) => {
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+
+    // const fileType = "application/vnd.ms-excel.sheet.binary.macroEnabled.12";
+    // const fileExtension = ".xlsb";
+    const table_elt = document.getElementById(idTable);
+    const ws = XLSX.utils.table_to_sheet(table_elt);
+    const wb = XLSX.utils.table_to_book(table_elt);
+
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
   };
 
   useEffect(() => {
@@ -367,11 +457,40 @@ export function UMKContainer() {
             return { value: d.value, label: t(d.label) };
           })}
         />
+
         <div>
           {loading ? (
             <>
               <Spinner size={"15px"} color={"blue"} />
               {loading}
+            </>
+          ) : null}
+        </div>
+        <div className="flex">
+          {umkList?.length > 0 && !isOpen ? (
+            <>
+              <button
+                className="Button"
+                title={t("export")}
+                onClick={() => {
+                  exportList(
+                    "listTable",
+                    `УМК_${year?.label}_${kafedra.label}_${rate.label}`
+                  );
+                }}
+              >
+                <i className="fa fa-file-export"></i>
+              </button>
+
+              <button
+                className="Button"
+                title={t("print")}
+                onClick={() => {
+                  printList();
+                }}
+              >
+                <i className="fas fa-print"></i>
+              </button>
             </>
           ) : null}
         </div>
@@ -381,36 +500,64 @@ export function UMKContainer() {
         title={umkSelected?.umkName}
         isOpen={isOpen}
         setIsOpen={setIsOpenHandler}
+        id={"modalDetail"}
       >
         <div>
           <div className="text-left">
             <p>
-              <small>Кафедра: {kafedra.label}</small>
+              <small>{t("umk:report.kafedra")}: {kafedra.label}</small>
             </p>
             <p>
-              <small>Курс: {umkSelected?.rate}</small>
+              <small>{t("umk:report.rate")}: {umkSelected?.rate}</small>
             </p>
             <p>
-              <small>Дисциплина: {umkSelected?.p34}</small>
+              <small>{t("umk:report.discipline")}: {umkSelected?.p34}</small>
             </p>
             <p>
-              <small>Преподаватель: {umkSelected?.s_t_fio}</small>
+              <small>{t("umk:report.teacher")}: {umkSelected?.s_t_fio}</small>
             </p>
             <br />
+            <div className="no-print flex">
+              {umkDetailList?.length > 0 && isOpen ? (
+                <>
+                  <button
+                    className="Button"
+                    title={t("export")}
+                    onClick={() => {
+                      exportList(
+                        "detailTable",
+                        `УМК_${umkSelected?.umkName}_${kafedra.label}_${rate.label}_${umkSelected?.p34}_${umkSelected?.s_t_fio}`
+                      );
+                    }}
+                  >
+                    <i className="fa fa-file-export"></i>
+                  </button>
+                  <button
+                    className="Button"
+                    title={t("print")}
+                    onClick={() => {
+                      printDetail();
+                    }}
+                  >
+                    <i className="fas fa-print"></i>
+                  </button>
+                </>
+              ) : null}
+            </div>
           </div>
 
           {umkDetailList.length > 0 ? (
             <>
-              <table>
+              <table id="detailTable">
                 <thead>
                   <tr>
                     <th width="5%">№</th>
-                    <th>Название</th>
-                    <th>Описание</th>
-                    <th>Семестр</th>
-                    <th>Файл</th>
-                    <th>Скачать</th>
-                    <th>Посмотреть</th>
+                    <th>{t("umk:report.table.name")}</th>
+                    <th>{t("umk:report.table.description")}</th>
+                    <th>{t("umk:report.table.semester")}</th>
+                    <th>{t("umk:report.table.file")}</th>
+                    <th className="no-print">{t("umk:report.table.download")}</th>
+                    <th className="no-print">{t("umk:report.table.view")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -421,7 +568,7 @@ export function UMKContainer() {
                       <td>{umkItem.description}</td>
                       <td>{umkItem.p43}</td>
                       <td>{umkItem.fileName}</td>
-                      <td>
+                      <td className="no-print">
                         <span
                           className="pointer"
                           title="Нажмите, чтобы скачать"
@@ -436,7 +583,7 @@ export function UMKContainer() {
                         </span>
                       </td>
 
-                      <td>
+                      <td className="no-print">
                         {isAllowedView(mimeType(umkItem.fileName)) ? (
                           <span
                             className="pointer"
@@ -463,11 +610,20 @@ export function UMKContainer() {
       </Modal>
 
       <div className="A4" id="A4">
-        <h4>конкурс calls={calls}</h4>
-        <p>Учебный год - {year.label} </p>
-        <p>Кафедра - {kafedra.label} </p>
-        <p>Курс - {rate.label} </p>
-        <table>
+        <div className="text-left">
+          <p>
+            <small>Учебный год: {year.label}</small>
+          </p>
+          <p>
+            <small>Кафедра: {kafedra.label}</small>
+          </p>
+          <p>
+            <small>Курс: {rate.label}</small>
+          </p>
+          <br />
+        </div>
+
+        <table id="listTable">
           <thead>
             <tr>
               <th width="5%">Дисциплина</th>
@@ -509,7 +665,7 @@ export function UMKContainer() {
                 </TRWrapper>
               ))
             )}
-            {docTypes.all && (
+            {summary.all && (
               <>
                 <tr>
                   <td>

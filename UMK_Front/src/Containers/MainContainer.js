@@ -13,10 +13,7 @@ export function MainContainer() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const MenuList = [
-    { id: 1, path: "umk", title: t("menu.umk") },
-    { id: 2, path: "view", title: t("menu.empty") },
-  ];
+  const MenuList = [{ id: 1, path: "umk", title: t("head.umk") }];
 
   if (!user.isAuthenticated) {
     navigate(`${appName}/login`);

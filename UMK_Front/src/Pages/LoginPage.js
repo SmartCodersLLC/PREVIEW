@@ -1,13 +1,17 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { LoginContainer } from "../Containers/LoginContainer";
 
 export function LoginPage() {
+  const { t } = useTranslation();
   return (
     <div className="Main">
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Авторизация | УМК AVN</title>
+        <title>
+          {t("head.login")} | {t("head.appTitle")}
+        </title>
       </Helmet>
       <LoginContainer />
     </div>

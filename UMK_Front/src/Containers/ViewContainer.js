@@ -31,7 +31,6 @@ export function ViewContainer() {
     const params = new URLSearchParams(window.location.search);
     const file = params.get("file");
     const type = params.get("type");
-    console.log({ file, type });
     if (file && type) {
       const url = `${baseURL}/umk/download?file=${encodeURIComponent(file)}`;
       fetch(url)
@@ -50,15 +49,15 @@ export function ViewContainer() {
           notify(error.message, "error");
         });
     } else {
-      setError("Не выбран документ");
+      setError(t("umk:view.noChoosen"));
     }
   }, []);
 
   if (!filePath || !type) {
     return (
       <div>
-        <h1> Ошибка</h1>
-        <p>Файл не указан!</p>
+        <h1>{t("error")}</h1>
+        <p>{t("umk:view.noFile")}</p>
         <p>{error}</p>
       </div>
     );
@@ -84,11 +83,12 @@ export function ViewContainer() {
 }
 
 function CustomErrorComponent({ error }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <h1> Ошибка</h1>
-      <p> Файл не найден! </p>
-      <p> {error}</p>
+      <h1>{t("error")}</h1>
+      <p>{t("umk:view.notFound")}</p>
+      <p>{error}</p>
     </div>
   );
 }

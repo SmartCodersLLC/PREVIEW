@@ -7,17 +7,23 @@ import { initReactI18next } from "react-i18next";
 import commonTranslationRU from "../Locales/ru/common.json";
 import commonTranslationKG from "../Locales/kg/common.json";
 import commonTranslationEN from "../Locales/en/common.json";
+import umkTranslationRU from "../Locales/ru/umk.json";
+import umkTranslationKG from "../Locales/kg/umk.json";
+import umkTranslationEN from "../Locales/en/umk.json";
 
 const resources = {
   // cm - namepsace, https://www.i18next.com/principles/namespaces
   ru: {
     cm: commonTranslationRU,
+    umk: umkTranslationRU,
   },
   kg: {
     cm: commonTranslationKG,
+    umk: umkTranslationKG,
   },
   en: {
     cm: commonTranslationEN,
+    umk: umkTranslationEN,
   },
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 import { useRoutes, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSetRecoilState, useRecoilState } from "recoil";

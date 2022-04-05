@@ -9,33 +9,21 @@ export const routes = [
   {
     path: `${appName}/`,
     element: <MainPage />,
-    title: "Главная",
   },
   {
     path: `${appName}/umk/*`,
     element: <UMKPage />,
-    title: "УМК",
-    children: [
-      {
-        path: `:id`,
-        element: <ViewPage />,
-        title: "Просмотр документа",
-      },
-    ],
   },
   {
     path: `${appName}/view`,
     element: <ViewPage />,
-    title: "Просмотр документа",
   },
   {
     path: `${appName}/login`,
     element: <LoginPage />,
-    title: "Авторизация",
   },
   {
     path: `*`,
     element: <LoginPage />,
-    title: "Начало",
   },
 ];
