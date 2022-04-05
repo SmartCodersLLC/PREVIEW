@@ -612,13 +612,13 @@ export function UMKContainer() {
       <div className="A4" id="A4">
         <div className="text-left">
           <p>
-            <small>Учебный год: {year.label}</small>
+            <small>{t("umk:report.year")}: {year.label}</small>
           </p>
           <p>
-            <small>Кафедра: {kafedra.label}</small>
+            <small>{t("umk:report.kafedra")}: {kafedra.label}</small>
           </p>
           <p>
-            <small>Курс: {rate.label}</small>
+            <small>{t("umk:report.rate")}: {rate.label}</small>
           </p>
           <br />
         </div>
@@ -626,8 +626,8 @@ export function UMKContainer() {
         <table id="listTable">
           <thead>
             <tr>
-              <th width="5%">Дисциплина</th>
-              <th>Преподаватель</th>
+              <th width="5%">{t("umk:report.discipline")}</th>
+              <th>{t("umk:report.teacher")}</th>
               {docTypes.map((type) => (
                 <th key={type}>{type}</th>
               ))}
