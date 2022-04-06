@@ -1,8 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-
-import * as FileSaver from "file-saver";
-import * as XLSX from "xlsx";
-
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -25,7 +21,8 @@ import {
 } from "lodash";
 
 import { notify } from "../Utils/notify";
-import { nestGroupsBy } from "../Utils/group";
+import { exportTableToExcel } from "../Utils/export";
+import { printDiv, printDocument } from "../Utils/printer";
 import { userState } from "../State/user";
 import {
   yearListState,
@@ -95,14 +92,14 @@ export function UMKContainer() {
   };
   const handleRate = (selected) => {
     if (kafedra.value === 0 && kafedraList.length > 1) {
-      notify(t("selector.chooseSeason"), "error");
+      notify(t("selector.chooseDeparment"), "error");
       return;
     }
     setRate(selected);
   };
 
   const getKafedraList = async () => {
-    setLoading("Загрузка списка кафедр...");
+    setLoading(t("umk:report.load.kafedra"));
     console.time("kafedra");
     const { data, status, message, error } = await SelectorService.kafedraList({
       year: year.value,
@@ -130,7 +127,7 @@ export function UMKContainer() {
       return;
     }
     console.time("getUmkList");
-    setLoading("Загрузка УМК...");
+    setLoading(t("umk:report.load.umk"));
     const { data, status, message, error } = await UMKService.list({
       year: year.value,
       kafedra: kafedra.value,
@@ -153,7 +150,7 @@ export function UMKContainer() {
       setDocTypes([]);
       return;
     }
-    setLoading("Идет группировка УМК...");
+    setLoading(t("umk:report.load.render"));
     console.time("render");
     // Сортируем по названию дисциплины, преподавателя
     const sortedData = sortBy(data, ["p34", "s_t_fio"], ["asc", "asc"]);
@@ -230,7 +227,7 @@ export function UMKContainer() {
 
   const getUmkDetails = async (umkInstance) => {
     console.time("getUmkDetails");
-    setLoading("Загрузка деталей УМК...");
+    setLoading(t("umk:report.load.details"));
     const { data, status, message, error } = await UMKService.detail({
       rate: rate.value,
       id_discipline: umkInstance.id_discipline,
@@ -301,7 +298,7 @@ export function UMKContainer() {
 
   const printList = () => {
     if (kafedra.value && rate.value && year.value) {
-      window.print();
+      printDocument();
     } else {
       notify(t("umk:report.noData"), "error");
     }
@@ -309,89 +306,25 @@ export function UMKContainer() {
 
   const printDetail = () => {
     if (umkSelected) {
-      const documentPrintWindow = document.getElementById("printWindow");
-      if (documentPrintWindow) {
-        document.body.removeChild(documentPrintWindow);
-      }
-      const printWindow = document.createElement("iframe");
-      printWindow.style.position = "absolute";
-      printWindow.style.top = "-1000px";
-      printWindow.style.left = "-1000px";
-      printWindow.id = "printWindow";
-
-      const html = `<html><head><title>${t("head.umk")}</title></head><body>
-        <style>
-        h5 {
-          text-align: center;
-          margin: 0;
-          margin-bottom: 20px;
-          font-size: 18px;
-        }
-        table {
-          border-collapse: collapse;
-          background-color: #fff;
-          width: 100%;
-          font-size: 14px;
-        }
-        td.break {
-          float: left;
-          line-height: 22px;
-        }
-        td,
-        th {
-          padding: 5px 10px;
-          height: 35px;
-          border: 1px solid #606060 !important;
-        }
-        table thead tr, table tbody td, small {
-          color: black !important;
-        }
-        .no-print,
-        .no-print-child,
-        .no-print-child * {
-          display: none !important;
-        }
-        p {
-          margin: 0;
-          padding: 5px;
-        }
-        .text-center {
-          text-align: center;
-        }
-        .text-left {
-          text-align: left;
-        }
-        .text-right {
-          text-align: right;
-        }
-        </style>
-        ${document.getElementById("modalDetail").innerHTML}
-        </body></html>`;
-
-      document.body.appendChild(printWindow);
-      printWindow.contentWindow.document.open();
-      printWindow.contentWindow.document.write(html);
-      printWindow.contentWindow.document.close();
-      printWindow.contentWindow.print();
+      const css = `h5 {text-align: center; margin: 0; margin-bottom: 20px; font-size: 18px;}
+      table { border-collapse: collapse; background-color: #fff; width: 100%; font-size: 14px;}
+      td.break { float: left; line-height: 22px;}
+      td, th { padding: 5px 10px; height: 35px; border: 1px solid #606060 !important;}
+      table thead tr, table tbody td, small { color: black !important; }
+      .no-print, .no-print-child, .no-print-child * { display: none !important; }
+      p { margin: 0; padding: 5px; }
+      .text-center { text-align: center;}
+      .text-left { text-align: left;}
+      .text-right { text-align: right;}`;
+      const html = document.getElementById("modalDetail").innerHTML;
+      printDiv(html, t("head.umk"), css);
     } else {
       notify(t("umk:report.noData"), "error");
     }
   };
 
   const exportList = (idTable, fileName) => {
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-
-    // const fileType = "application/vnd.ms-excel.sheet.binary.macroEnabled.12";
-    // const fileExtension = ".xlsb";
-    const table_elt = document.getElementById(idTable);
-    const ws = XLSX.utils.table_to_sheet(table_elt);
-    const wb = XLSX.utils.table_to_book(table_elt);
-
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + fileExtension);
+    exportTableToExcel(idTable, fileName);
   };
 
   useEffect(() => {
@@ -431,7 +364,7 @@ export function UMKContainer() {
           classNamePrefix="my_select"
           value={year}
           isSearchable={false}
-          placeholder={t("selector.chooseYear")}
+          placeholder={t("selector.choose")}
           onChange={handleYear}
           options={yearList?.map((d) => d)}
         />
@@ -440,18 +373,18 @@ export function UMKContainer() {
           classNamePrefix="my_select"
           value={kafedra}
           isSearchable={true}
-          placeholder={t("selector.chooseSeason")}
+          placeholder={t("cm:selector.choose")}
           onChange={handleKafedra}
           options={kafedraList?.map((d) => {
             return { value: d.value, label: t(d.label) };
           })}
-        />
+        /> 
         <Select
           className="Select"
           classNamePrefix="my_select"
           value={rate}
           isSearchable={false}
-          placeholder={t("selector.chooseRate")}
+          placeholder={t("cm:selector.choose")}
           onChange={handleRate}
           options={rateList?.map((d) => {
             return { value: d.value, label: t(d.label) };
@@ -505,16 +438,24 @@ export function UMKContainer() {
         <div>
           <div className="text-left">
             <p>
-              <small>{t("umk:report.kafedra")}: {kafedra.label}</small>
+              <small>
+                {t("umk:report.kafedra")}: {kafedra.label}
+              </small>
             </p>
             <p>
-              <small>{t("umk:report.rate")}: {umkSelected?.rate}</small>
+              <small>
+                {t("umk:report.rate")}: {umkSelected?.rate}
+              </small>
             </p>
             <p>
-              <small>{t("umk:report.discipline")}: {umkSelected?.p34}</small>
+              <small>
+                {t("umk:report.discipline")}: {umkSelected?.p34}
+              </small>
             </p>
             <p>
-              <small>{t("umk:report.teacher")}: {umkSelected?.s_t_fio}</small>
+              <small>
+                {t("umk:report.teacher")}: {umkSelected?.s_t_fio}
+              </small>
             </p>
             <br />
             <div className="no-print flex">
@@ -556,7 +497,9 @@ export function UMKContainer() {
                     <th>{t("umk:report.table.description")}</th>
                     <th>{t("umk:report.table.semester")}</th>
                     <th>{t("umk:report.table.file")}</th>
-                    <th className="no-print">{t("umk:report.table.download")}</th>
+                    <th className="no-print">
+                      {t("umk:report.table.download")}
+                    </th>
                     <th className="no-print">{t("umk:report.table.view")}</th>
                   </tr>
                 </thead>
@@ -571,7 +514,7 @@ export function UMKContainer() {
                       <td className="no-print">
                         <span
                           className="pointer"
-                          title="Нажмите, чтобы скачать"
+                          title={t("umk:report.table.downloadTitle")}
                           onClick={() =>
                             download({
                               id: umkItem.id,
@@ -587,7 +530,7 @@ export function UMKContainer() {
                         {isAllowedView(mimeType(umkItem.fileName)) ? (
                           <span
                             className="pointer"
-                            title="Нажмите, чтобы посмотреть"
+                            title={t("umk:report.table.viewTitle")}
                             onClick={() =>
                               view({
                                 id: umkItem.id,
@@ -612,13 +555,19 @@ export function UMKContainer() {
       <div className="A4" id="A4">
         <div className="text-left">
           <p>
-            <small>{t("umk:report.year")}: {year.label}</small>
+            <small>
+              {t("umk:report.year")}: {year.label}
+            </small>
           </p>
           <p>
-            <small>{t("umk:report.kafedra")}: {kafedra.label}</small>
+            <small>
+              {t("umk:report.kafedra")}: {kafedra.label}
+            </small>
           </p>
           <p>
-            <small>{t("umk:report.rate")}: {rate.label}</small>
+            <small>
+              {t("umk:report.rate")}: {rate.label}
+            </small>
           </p>
           <br />
         </div>
@@ -669,10 +618,11 @@ export function UMKContainer() {
               <>
                 <tr>
                   <td>
-                    <b>Дисциплин:</b> {summary?.discipline}
+                    <b>{t("umk:report.summary.disciplines")}:</b>{" "}
+                    {summary?.discipline}
                   </td>
                   <td>
-                    Все / По дисциплинам <br /> {summary?.teacher}
+                    {t("umk:report.summary.teachers")} <br /> {summary?.teacher}
                   </td>
                   {docTypes.map((type) => (
                     <td key={type}>
@@ -684,7 +634,7 @@ export function UMKContainer() {
 
                 <tr>
                   <td colSpan={2 + docTypes?.length}>
-                    Всего УМК: {summary?.all}
+                    {t("umk:report.summary.all")}: {summary?.all}
                   </td>
                 </tr>
               </>

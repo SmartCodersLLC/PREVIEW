@@ -1,14 +1,36 @@
 {
-    "login": {
-      "auth": "Авторизация"
+  "report": {
+    "noData": "No data available",
+    "kafedra": "Department",
+    "rate": "Rate",
+    "discipline": "Discipline",
+    "teacher": "Teacher",
+    "year": "Academic year",
+    "table": {
+      "name": "Name",
+      "description": "Description",
+      "semester": "Semester",
+      "file": "File",
+      "download": "Download",
+      "view": "View",
+      "viewTitle": "Click to view",
+      "downloadTitle": "Click to download"
     },
-    "profile": {
-      "profile": "Профиль",
-      "oldPassword": "Старый пароль",
-      "newPassword": "Новый пароль",
-      "confirmPassword": "Новый пароль (повторите)",
-      "save": "Сохранить",
-      "changePassword": "Изменить пароль"
+    "summary": {
+      "disciplines": "Disciplines",
+      "teachers": "All / By discipline",
+      "all": "All"
+    },
+    "load": {
+      "kafedra": "Department list is loading...",
+      "umk": "UMK report is loading...",
+      "render": "Report is rendering...",
+      "details": "UMK lists are loading..."
     }
+  },
+  "view": {
+    "noChoosen": "No choosen file",
+    "noFile": "No file",
+    "notFound": "File not found"
   }
-  
+}

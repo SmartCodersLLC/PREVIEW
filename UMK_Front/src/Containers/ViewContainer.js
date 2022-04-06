@@ -67,9 +67,11 @@ export function ViewContainer() {
     <div className="UMKContainer">
       <div className="A4" id="A4">
         {error ? (
-          <>
-            <CustomErrorComponent error={error} />
-          </>
+          <div>
+            <h1>{t("error")}</h1>
+            <p>{t("umk:view.notFound")}</p>
+            <p>{error}</p>
+          </div>
         ) : (
           <FileViewer
             fileType={type}
@@ -78,17 +80,6 @@ export function ViewContainer() {
           />
         )}
       </div>
-    </div>
-  );
-}
-
-function CustomErrorComponent({ error }) {
-  const { t } = useTranslation();
-  return (
-    <div>
-      <h1>{t("error")}</h1>
-      <p>{t("umk:view.notFound")}</p>
-      <p>{error}</p>
     </div>
   );
 }
