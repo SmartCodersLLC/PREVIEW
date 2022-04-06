@@ -10,26 +10,26 @@ import Page from "./Pages";
 import "./index.css";
 import "./Utils/i18n";
 
-function DebugObserver(): React.Node {
-  const snapshot = useRecoilSnapshot();
-  useEffect(() => {
-    console.debug("The following atoms were modified:");
-    for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
-      console.debug(
-        "DebugObserver--->>>",
-        node.key,
-        snapshot.getLoadable(node)
-      );
-    }
-  }, [snapshot]);
+// function DebugObserver(): React.Node {
+//   const snapshot = useRecoilSnapshot();
+//   useEffect(() => {
+//     console.debug("The following atoms were modified:");
+//     for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
+//       console.debug(
+//         "DebugObserver--->>>",
+//         node.key,
+//         snapshot.getLoadable(node)
+//       );
+//     }
+//   }, [snapshot]);
 
-  return null;
-}
+//   return null;
+// }
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <DebugObserver />
+      {/* <DebugObserver /> */}
 
       <HelmetProvider>
         <div className="App">

@@ -1,12 +1,7 @@
 1.  доступ к проц. SP_RS_LMS_umk_kafedra_exist в программе AVN17  полььзователю o_dekanat
 2.  доступ к проц. SP_RS_LMS_umk_kafedra_exist_detail в программе AVN17  полььзователю o_dekanat
-3. существует ли файл УМК 
-Добавить в T_Books поле "exist" - bit, не null, по умолчанию 1 
-
-4. доступ "SELECT","UPDATE" к таблице T_Books в программе AVN17  полььзователю o_dekanat   
-5. доступ "INSERT" "DELETE" к таблице T_Books_Exist в программе AVN17  полььзователю o_dekanat   
-
-
+3. Таблицы =>  kafedra, educ_sh, a_year
+4. View => V_GetCurrentAcademicIdYear
 
 
 
