@@ -1,5 +1,8 @@
 \node_modules
 UMK_Backend\node_modules
+UMK_Front_prod\node_modules
+UMK_Front_prod\public
+UMK_Front_prod\src
 UMK_Backend\upload
 UMK_Front\node_modules
 *.rar

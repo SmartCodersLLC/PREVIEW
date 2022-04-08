@@ -1,0 +1,236 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Roboto;
+  color: #3f3f3f;
+  background: #ecf5ff;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.App {
+  text-align: center;
+  position: relative;
+  max-width: 1440px;
+  padding: 0 40px;
+  margin: auto;
+}
+
+.Main h3 {
+  font-size: 18px !important;
+}
+
+.A4 {
+  /* width: calc(210mm  - 20mm);
+  min-height: calc(297mm - 20mm); */
+  width: calc(297mm- 20mm);
+  min-height: calc(210mm - 20mm);
+  margin: auto;
+  margin-top: 40px !important;
+  box-shadow: 0 10px 29px 0 rgb(68 88 144 / 10%);
+  background: #fff;
+  padding: 10mm;
+}
+
+button {
+  height: 40px !important;
+  font-size: 21px;
+  font-weight: 600;
+  color: #004da0d8 !important;
+  box-shadow: 0 5px 15px 0 rgb(68 88 144 / 10%);
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 16px;
+  border: none;
+}
+
+/*----------Table-----------*/
+h4 {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: #fff;
+  width: 100%;
+  font-size: 14px;
+}
+
+td.break {
+  float: left;
+  line-height: 22px;
+}
+
+td,
+th {
+  padding: 5px 10px;
+  height: 35px;
+  border: 1px solid #606060 !important;
+}
+
+td {
+  color: #000;
+}
+table thead tr {
+  background: #718096;
+  color: #fff;
+}
+
+/* pointer */
+.pointer {
+  cursor: pointer;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-justify {
+  text-align: justify;
+}
+.text-nowrap {
+  white-space: nowrap;
+}
+.text-lowercase {
+  text-transform: lowercase;
+}
+.text-uppercase {
+  text-transform: uppercase;
+}
+.text-capitalize {
+  text-transform: capitalize;
+}
+.text-muted {
+  color: #636c72;
+}
+.text-primary {
+  color: #2c3e50;
+}
+.text-success {
+  color: #00b894;
+}
+.text-info {
+  color: #3498db;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-white {
+  color: #fff;
+}
+.text-black {
+  color: #000;
+}
+
+/*----------select-----------*/
+.Selectors_Wrapper {
+  /* border-bottom: 2px solid #007bff; */
+  padding: 16px 40px;
+  margin: 0 -40px;
+  box-shadow: 0 10px 29px 0 rgb(68 88 144 / 10%);
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: center;
+  z-index: 99;
+  align-items: center;
+}
+.flex{
+  display: flex;
+}
+
+.Select {
+  font-size: 12px;
+  min-width: 150px;
+  width: 100%;
+}
+
+.my_select__control {
+  box-shadow: 0 5px 15px 0 rgb(68 88 144 / 10%) !important;
+  border: 1px solid #c3dafe !important;
+  cursor: pointer !important;
+  height: 40px;
+}
+
+.my_select__menu {
+  padding: 0 !important;
+  box-shadow: 0 5px 15px 0 rgb(68 88 144 / 10%) !important;
+  border: 1px solid #c3dafe;
+  margin: 2px !important;
+  width: calc(100% - 4px) !important;
+  background-color: #f4f9ff !important;
+}
+
+.my_select__menu-list {
+  padding: 0 !important;
+}
+
+.my_select__option {
+  cursor: pointer !important;
+}
+
+.my_select__option .isSelected {
+  background: chartreuse !important;
+}
+
+/* scrool styles */
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #004da0d8 none;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: none;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #004da0d8 !important;
+  border-radius: 20px;
+  border: 3px solid none;
+}
+
+/* // print styles */
+@media print {
+  .no-print,
+  .no-print-child,
+  .no-print-child * {
+    display: none !important;
+  }
+  table thead tr,
+  small {
+    color: black !important;
+  }
+  .A4,
+  #A4 {
+    margin: 0 !important;
+    /* padding-top: 0 !important; */
+    box-shadow: none !important;
+  }
+}

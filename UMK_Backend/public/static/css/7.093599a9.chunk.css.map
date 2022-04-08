@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/Styles/UMKContainer.css"],"names":[],"mappings":"AAAA,mBACE,YAAa,CACb,sDAAuD,CACvD,aACF,CACA,UACE,cACF","file":"7.093599a9.chunk.css","sourcesContent":[".Selectors_Wrapper {\r\n  display: grid;\r\n  grid-template-columns: auto 140px 200px 140px 1fr 150px;\r\n  grid-gap: 20px;\r\n}\r\n.umkCount {\r\n  cursor: pointer;\r\n}\r\n"]}

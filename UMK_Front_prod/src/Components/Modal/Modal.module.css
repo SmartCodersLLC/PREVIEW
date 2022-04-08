@@ -1,0 +1,88 @@
+/* @src/components/Modal/Modal.module.css */
+
+.darkBG {
+  /* background-color: rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  height: 100vh;
+   top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute; */
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  height: 100vh;
+  z-index: 222;
+  top: 0;
+  right: 0;
+  position: fixed;
+}
+
+.centered {
+  z-index: 230;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal {
+  position: relative !important;
+  background: white;
+  color: white;
+  z-index: 230;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  padding: 30px;
+}
+
+.modalHeader {
+  height: 50px;
+  background: white;
+  overflow: hidden;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.heading {
+  margin: 0;
+  padding: 10px;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+}
+
+.modalContent {
+  padding: 10px;
+  font-size: 14px;
+  color: #2c3e50;
+  text-align: center;
+  width: 80vw;
+  height: 60vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.closeBtn {
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+  color: #004da0d8 !important;
+  background: white;
+  transition: all 0.25s ease;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.06);
+  position: absolute !important;
+  right: 0;
+  top: 0;
+  align-self: flex-end;
+  margin-top: -7px;
+  margin-right: -7px;
+}
+
+.closeBtn:hover {
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  transform: translate(-4px, 4px);
+}

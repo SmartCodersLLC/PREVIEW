@@ -1,0 +1,58 @@
+POST http://localhost:3150/avnumk/api/v1/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "login": "jt",
+    "password": "123"
+}
+
+###
+POST http://localhost:3150/avnumk/api/v1/select/year/default HTTP/1.1
+content-type: application/json
+
+ 
+###
+POST http://localhost:3150/avnumk/api/v1/select/year/list HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:3150/avnumk/api/v1/select/kafedra/list HTTP/1.1
+content-type: application/json
+
+{
+    "year": 15
+}
+
+###
+POST http://localhost:3150/avnumk/api/v1/umk/list HTTP/1.1
+content-type: application/json
+
+{
+    "year": 18,
+    "rate": 1,
+    "kafedra": 57
+}
+
+###
+POST http://localhost:3150/avnumk/api/v1/umk/detail HTTP/1.1
+content-type: application/json
+
+{
+    "rate": 1,
+    "id_typeUmk": 12,
+    "id_discipline": 2531,
+    "id_teacher": 288
+}
+
+
+
+###
+POST http://localhost:3150/avnumk/api/v1/check/books HTTP/1.1
+content-type: application/json
+
+
+
+###
+POST http://localhost:3150/avnumk/api/v1/check/directory HTTP/1.1
+content-type: application/json
+

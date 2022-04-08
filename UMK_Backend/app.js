@@ -58,7 +58,7 @@ app.use(`/${appUrl}/api/${appVersion}`, indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  return res.sendFile(path.join(__dirname, "public", "404.html"));
+  return res.sendFile(path.join(__dirname, "public", "index.html"));
   // next(createError(404));
 });
 
