@@ -2,6 +2,7 @@
 import { atom } from "recoil";
 
 const NOW = new Date().getFullYear();
+const MONTH = new Date().getMonth();
 
 const FIRST_ID = (NOW % 100) - 4;
 const SECOND_ID = (NOW % 100) - 3;
@@ -26,6 +27,8 @@ const yearListDefault = [
   { value: SIXTH_ID, label: SIXTH_NAME },
 ];
 
+const defaultYear = MONTH < 8 ? yearListDefault[3] : yearListDefault[4];
+
 export const yearListState = atom({
   key: "yearListState",
   default: yearListDefault,
@@ -33,10 +36,10 @@ export const yearListState = atom({
 
 export const defaultYearState = atom({
   key: "defaultYearState",
-  default: { value: FIFTH_ID, label: FIFTH_NAME },
+  default: defaultYear,
 });
 
 export const selectedYearState = atom({
   key: "selectedYearState",
-  default: { value: FIFTH_ID, label: FIFTH_NAME },
+  default: defaultYear,
 });

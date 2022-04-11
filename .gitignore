@@ -1,3 +1,5 @@
+\font-awesome
+\Install\UMK_CHECK
 \node_modules
 UMK_Backend\node_modules
 UMK_Front_prod\node_modules

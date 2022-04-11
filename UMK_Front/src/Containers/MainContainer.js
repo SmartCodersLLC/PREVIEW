@@ -6,6 +6,7 @@ import { userState } from "../State/user";
 import { appName } from "../Service/http";
 import MenuItem from "../Components/Menu/Item";
 import MenuWrapper from "../Components/Menu/Wrapper";
+import Language from "../Components/Language";
 
 export function MainContainer() {
   const [hovered, setHover] = useState(0);
@@ -19,17 +20,20 @@ export function MainContainer() {
     navigate(`${appName}/login`);
   }
   return (
-    <MenuWrapper>
-      {MenuList.map((menu) => {
-        return (
-          <MenuItem
-            key={menu.id}
-            menu={menu}
-            hovered={hovered}
-            handleHover={setHover}
-          />
-        );
-      })}
-    </MenuWrapper>
+    <>
+      <Language />
+      <MenuWrapper>
+        {MenuList.map((menu) => {
+          return (
+            <MenuItem
+              key={menu.id}
+              menu={menu}
+              hovered={hovered}
+              handleHover={setHover}
+            />
+          );
+        })}
+      </MenuWrapper>
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-const hostURL = "http://localhost:3150";
+const hostURL = "";
 const localURL = "http://localhost:3000";
 const appName = "/avnumk";
 const apiURL = `/api`;

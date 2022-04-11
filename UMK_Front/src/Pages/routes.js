@@ -1,14 +1,10 @@
-import React, { Lazy } from "react";
+import React, { lazy } from "react";
 import { appName } from "../Service/http";
 
-const MainPage = Lazy(() => import("./MainPage"));
-const UMKPage = Lazy(() => import("./UMKPage"));
-const LoginPage = Lazy(() => import("./LoginPage"));
-const ViewPage = Lazy(() => import("./ViewPage"));
-// import { MainPage } from "./MainPage";
-// import { UMKPage } from "./UMKPage";
-// import { LoginPage } from "./LoginPage";
-// import { ViewPage } from "./ViewPage";
+const MainPage = lazy(() => import("./MainPage"));
+const UMKPage = lazy(() => import("./UMKPage"));
+const LoginPage = lazy(() => import("./LoginPage"));
+const ViewPage = lazy(() => import("./ViewPage"));
 
 export const routes = [
   {

@@ -17,5 +17,10 @@
     "yearDefaultOK": "Default year is OK",
     "yearListOK": "Year list is OK",
     "kafedraListOK": "Department list is OK"
+  },
+  "umk": {
+    "umkListOK": "UMK report list",
+    "umkDetailOK": "UMK report detail",
+    "umkDownloadError": "Failed to download UMK, File not found"
   }
 }

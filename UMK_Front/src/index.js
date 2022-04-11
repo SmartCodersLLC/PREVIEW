@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
@@ -28,18 +28,20 @@ import "./Utils/i18n";
 
 ReactDOM.render(
   <React.StrictMode>
-    <RecoilRoot>
-      {/* <DebugObserver /> */}
+    <Suspense fallback={<div>Загрузка...</div>}>
+      <RecoilRoot>
+        {/* <DebugObserver /> */}
 
-      <HelmetProvider>
-        <div className="App">
-          <Router>
-            <Page />
-          </Router>
-          <ToastContainer />
-        </div>
-      </HelmetProvider>
-    </RecoilRoot>
+        <HelmetProvider>
+          <div className="App">
+            <Router>
+              <Page />
+            </Router>
+            <ToastContainer />
+          </div>
+        </HelmetProvider>
+      </RecoilRoot>
+    </Suspense>
   </React.StrictMode>,
   document.getElementById("root")
 );

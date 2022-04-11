@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { AuthService } from "../Service/auth";
@@ -39,6 +39,11 @@ export function LoginContainer() {
   if (!user.isLoading && user.isAuthenticated) {
     navigate(`${appName}/`);
   }
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      navigate(`${appName}/`);
+    }
+  }, []);
 
   return (
     <>

@@ -17,5 +17,10 @@
     "yearDefaultOK": "Азыркы жыл",
     "yearListOK": "Жылдар",
     "kafedraListOK": "Кафедралар"
+  },
+  "umk": {
+    "umkListOK": "УМК отчету",
+    "umkDetailOK": "Дисциплина боюнча УМКлар",
+    "umkDownloadError": "УМК жүктөө туура эмес, файл табылган жок"
   }
 }

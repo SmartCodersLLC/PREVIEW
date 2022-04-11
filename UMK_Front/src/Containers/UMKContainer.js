@@ -74,6 +74,16 @@ export function UMKContainer() {
     setRate(selected);
   };
 
+  const getYearDefault = async () => {
+    const { data, message, error } = await SelectorService.yearDefault();
+    if (error) {
+      notify(message, "error");
+    }
+    if (data) {
+      setYear({ value: data.id, label: data.name });
+    }
+  };
+
   const getKafedraList = async () => {
     setLoading(t("umk:report.load.kafedra"));
     console.time("kafedra");
@@ -104,7 +114,7 @@ export function UMKContainer() {
     }
     console.time("getUmkList");
     setLoading(t("umk:report.load.umk"));
-    const { data,   message, error } = await UMKService.list({
+    const { data, message, error } = await UMKService.list({
       year: year.value,
       kafedra: kafedra.value,
       rate: rate.value,
@@ -302,6 +312,10 @@ export function UMKContainer() {
   const exportList = (idTable, fileName) => {
     exportTableToExcel(idTable, fileName);
   };
+
+  useEffect(() => {
+    getYearDefault();
+  }, []);
 
   useEffect(() => {
     kafedraReset();

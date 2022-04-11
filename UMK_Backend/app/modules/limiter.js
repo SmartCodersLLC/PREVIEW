@@ -24,11 +24,12 @@ const rateLimiterLoginPerDay = new RateLimiterMemory({
 const rateLimiterAPI = new RateLimiterMemory({
   points: 100,
   duration: 100, // Per 100 seconds
-  inmemoryBlockDuration: 1, 
+  inmemoryBlockDuration: 1,
 });
 
 const rateLimiterMiddleware = (req, res, next) => {
   const key = req.body && req.body.login ? req.body.login : req.ip;
+  console.log("req.ip,", req.ip);
 
   // if (req.path.includes("auth/login")) {
   // rateLimiterLoginPerDay
@@ -65,7 +66,7 @@ const rateLimiterMiddleware = (req, res, next) => {
   rateLimiterAPI
     .consume(key, maxWrongAttemptsAPI)
     .then((e) => {
-        console.log('response', e)
+      console.log("response", e);
 
       next();
     })

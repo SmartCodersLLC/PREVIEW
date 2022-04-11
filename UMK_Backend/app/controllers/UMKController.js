@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { sql, poolPromise } = require("../DB.js");
 const COOKIE = require("../cookies.js");
 const send = require("../modules/send");
@@ -64,8 +65,8 @@ class UMKController {
         return send(res, false, req.t("inValidFormat"), true, 400);
       }
       const { file } = req.query;
-      const dir = "D:\\Projects\\AVN\\UMK_REPORT\\UMK_Backend";
-      const filePath = `${dir}\\upload\\${decodeURIComponent(file)}`;
+      const dir = process.env.UMK_PATH; //"D:\\Projects\\AVN\\UMK_REPORT\\UMK_Backend";
+      const filePath = `${dir}${decodeURIComponent(file)}`;
       const existsFile = await exists(filePath);
       if (existsFile) {
         return res.download(filePath); // Set disposition and send it.

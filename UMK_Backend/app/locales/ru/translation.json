@@ -17,5 +17,10 @@
     "yearDefaultOK": "Текущий год",
     "yearListOK": "Список годов",
     "kafedraListOK": "Список кафедр"
+  },
+  "umk": {
+    "umkListOK": "Список отчетов по УМК",
+    "umkDetailOK": "Список УМК по дисциплине преподавателя",
+    "umkDownloadError": "Ошибка файл не найден"
   }
 }

@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useRoutes, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 import TopButton from "../Components/TopButton";
 import { http, appName } from "../Service/http";
 import { notify } from "../Utils/notify";
 import { AuthService } from "../Service/auth";
 import { userState } from "../State/user";
-import { numberOfAxiosCallState } from "../State/loader";
 import { routes } from "./routes";
+
+const Routes = () => {
+  const elements = useRoutes(routes);
+  return elements;
+};
 
 export default function IndexPage() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const setUser = useSetRecoilState(userState);
   const [Loading, setLoading] = useState(true);
-  const [calls, setCalls] = useRecoilState(numberOfAxiosCallState);
-  const routesList = useRoutes(routes);
   const { pathname } = useLocation();
 
   useEffect(() => {
     http.interceptors.request.use(
       (config) => {
-        setCalls(calls + 1);
-        console.log("setCalls request", calls);
-
         config.params = {
           ...config.params,
           lang: i18n.language,
@@ -33,8 +32,6 @@ export default function IndexPage() {
         return config;
       },
       (error) => {
-        // setCalls(calls - 1);
-        console.log("error setCalls request");
         console.log(error);
         return Promise.reject(error);
       }
@@ -42,15 +39,10 @@ export default function IndexPage() {
 
     http.interceptors.response.use(
       (response) => {
-        setCalls(calls - 1);
-        console.log("setCalls response", calls);
-
         const data = { ...response.data, status: response.status };
         return data;
       },
       (error) => {
-        // setCalls(calls - 1);
-        console.log("error setCalls response", calls);
         if (error.response === undefined) {
           // server is not responding
           let errorObject = JSON.parse(JSON.stringify(error));
@@ -93,14 +85,19 @@ export default function IndexPage() {
 
     setUser({ isAuthenticated: false, data: null, isLoading: true });
     AuthService.check().then(({ data, error, message, status }) => {
-      console.log("AuthService", data, error, message, status);
       if (error) {
         setUser({ isAuthenticated: false, data: null, isLoading: false });
         notify(message, "error");
       } else {
         notify(message, "success");
         setUser({ isAuthenticated: true, data, isLoading: false });
-        navigate(`${pathname}${window.location.search}`);
+        if (window?.location?.pathname?.includes(`${appName}/login`)) {
+          // if in login page and auth=true
+          navigate(`${appName}/`);
+        } else {
+          // if not in login page and auth=true
+          navigate(`${pathname}${window.location.search}`);
+        }
       }
       setLoading(false);
     });
@@ -111,7 +108,7 @@ export default function IndexPage() {
   }
   return (
     <div className="Page" id="Page">
-      {routesList}
+      <Routes />
       <TopButton />
     </div>
   );
