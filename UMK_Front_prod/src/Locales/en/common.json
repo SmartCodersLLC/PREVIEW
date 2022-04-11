@@ -6,6 +6,7 @@
   "print": "Print",
   "export": "Export",
   "error": "Error",
+  "logout": "Logout",
   "axios": {
     "unknownError": "Unknown internet connection error",
     "internetError": "Internet connection error, check your internet connection",
