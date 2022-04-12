@@ -43,6 +43,16 @@ export function LoginContainer() {
     if (user.isAuthenticated) {
       navigate(`${appName}/`);
     }
+    const listener = (event) => {
+      if (event.code === "Enter" || event.code === "NumpadEnter") {
+        event.preventDefault();
+        handleLogin(event);
+      }
+    };
+    document.addEventListener("keydown", listener);
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
   }, []);
 
   return (
