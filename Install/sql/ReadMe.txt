@@ -1,17 +1,18 @@
 
 Настройка базы данных
-1.  доступ к проц. SP_RS_LMS_umk_kafedra_exist в программе AVN17  полььзователю o_dekanat
-2.  доступ к проц. SP_RS_LMS_umk_kafedra_exist_detail в программе AVN17  полььзователю o_dekanat
-3. Таблицы =>  kafedra, educ_sh, a_year
-4. View => V_GetCurrentAcademicIdYear
-5. Добавить AVN_UMK в ID_PROG_ID  (таблица AVN_Prog_List.id_prog_id)
+1.1  доступ к проц. SP_RS_LMS_umk_kafedra_exist в программе AVN17  полььзователю o_dekanat
+1.2.  доступ к проц. SP_RS_LMS_umk_kafedra_exist_detail в программе AVN17  полььзователю o_dekanat
+1.3.  доступ к проц. SP_RS_LMS_umk_userKafedra в программе AVN17  полььзователю o_dekanat
+1.4. Таблицы =>  kafedra, educ_sh, a_year
+1.5. View => V_GetCurrentAcademicIdYear
+2.1 Добавить AVN_UMK в ID_PROG_ID  (таблица AVN_Prog_List.id_prog_id)
         INSERT INTO AVN.dbo.AVN_Prog_List
         (id_prog_id, description, version)
         VALUES(N'AVN_UMK', N'Проверка УМК', 1); 
         INSERT INTO AVN.dbo.Prog_Security
         (id_prog_list, id_sql_user)
         VALUES(SCOPE_IDENTITY(), 5);
-6. Добавить доступ AVN_UMK каждому админу в кафедре программа AVN20 
+3. Добавить доступ AVN_UMK каждому админу в кафедре программа AVN20 
     
 
 Установка
