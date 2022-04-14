@@ -15,6 +15,7 @@ export default function Login({
   passwordRef,
   handleLogin,
   isLoading,
+  handleKeyDown,
 }) {
   const { t } = useTranslation();
   return (
@@ -30,6 +31,7 @@ export default function Login({
               value={login}
               onChange={(e) => setLogin(e.target.value)}
               ref={loginRef}
+              onKeyDown={handleKeyDown}
             />
             <i className="fa fa-user"></i>
           </div>
@@ -41,6 +43,7 @@ export default function Login({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               ref={passwordRef}
+              onKeyDown={handleKeyDown}
             />
             <i className="fa fa-lock"></i>
           </div>

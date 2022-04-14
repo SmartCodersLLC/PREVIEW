@@ -17,7 +17,7 @@ export function LoginContainer() {
   const passwordRef = useRef(null);
 
   const handleLogin = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     setIsLoading(true);
     setUser({ isAuthenticated: false, data: null, isLoading: true });
 
@@ -39,20 +39,17 @@ export function LoginContainer() {
   if (!user.isLoading && user.isAuthenticated) {
     navigate(`${appName}/`);
   }
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === "NumpadEnter") {
+      handleLogin(event);
+    }
+  };
+
   useEffect(() => {
     if (user.isAuthenticated) {
       navigate(`${appName}/`);
     }
-    const listener = (event) => {
-      if (event.code === "Enter" || event.code === "NumpadEnter") {
-        event.preventDefault();
-        handleLogin(event);
-      }
-    };
-    document.addEventListener("keydown", listener);
-    return () => {
-      document.removeEventListener("keydown", listener);
-    };
   }, []);
 
   return (
@@ -67,6 +64,7 @@ export function LoginContainer() {
         passwordRef={passwordRef}
         handleLogin={handleLogin}
         isLoading={isLoading}
+        handleKeyDown={handleKeyDown}
       />
     </>
   );

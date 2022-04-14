@@ -3,6 +3,7 @@ const { sql, poolPromise } = require("../DB.js");
 const send = require("../modules/send");
 const validate = require("../modules/validator");
 const { kafedraSchema } = require("../schemas/SelectorSchema");
+const { kafedraListByUserDB } = require("../services/SelectorService");
 
 // controller для работы селекторов
 class SelectorController {
@@ -49,25 +50,15 @@ class SelectorController {
     }
   }
 
-  // post запрос для получения списка кафедр по году обучения
+  // post запрос для получения списка кафедр по преподавателю
   async kafedraList(req, res) {
     try {
-      const isValid = validate(req.body, kafedraSchema);
-      if (!isValid) {
-        return send(res, false, req.t("inValidFormat"), true, 400);
+      const { id_avn_user } = await COOKIE.GET_USER(req);
+      const { data, error } = await kafedraListByUserDB({ id_avn_user });
+      if (error) {
+        return send(res, false, req.t("errorQuery", { error }), true, 400);
       }
-      const { year } = req.body;
-      const queryText = `
-      SELECT kafedra.id_kafedra, kafedra.f1 as name
-      FROM kafedra INNER JOIN educ_sh ON kafedra.id_kafedra = educ_sh.id_kafedra
-      WHERE educ_sh.id_a_year = ${year}
-      GROUP BY kafedra.id_kafedra, kafedra.f1
-      ORDER BY kafedra.f1`;
-
-      const pool = await poolPromise();
-      let r = await pool.query(queryText);
-      let yearList = r.recordset;
-      return send(res, yearList, req.t("selector.kafedraListOK"));
+      return send(res, data, req.t("selector.kafedraListOK"));
     } catch (err) {
       console.log(err);
       return send(
