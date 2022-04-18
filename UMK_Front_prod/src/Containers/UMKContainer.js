@@ -109,7 +109,7 @@ export function UMKContainer() {
   };
 
   const getUmkList = async () => {
-    if (kafedraList.length < 2 || kafedra.value === 0 || rate.value === 0) {
+    if (kafedraList.length < 1 || kafedra.value === 0 || rate.value === 0) {
       return;
     }
     console.time("getUmkList");
