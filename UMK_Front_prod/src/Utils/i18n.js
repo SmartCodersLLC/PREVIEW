@@ -47,6 +47,7 @@ i18n
     // Стандартный язык
     fallbackLng: "ru",
     debug: false,
+    ns: ["cm", "umk"],
     defaultNS: "cm",
     // Распознавание и кэширование языковых кук
     detection: {
