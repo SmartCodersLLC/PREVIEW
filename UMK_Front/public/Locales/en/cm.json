@@ -1,0 +1,44 @@
+{
+  "loading": "Loading...",
+  "goTop": "Go Top",
+  "goDown": "Go Down",
+  "back": "Back",
+  "print": "Print",
+  "export": "Export",
+  "error": "Error",
+  "logout": "Logout",
+  "axios": {
+    "unknownError": "Unknown internet connection error",
+    "internetError": "Internet connection error, check your internet connection",
+    "sessionExpired": "Your session has expired. Please, log in again."
+  },
+  "login": {
+    "title": "Authentication",
+    "sign": "Sign in",
+    "password": "Password",
+    "login": "Login"
+  },
+  "selector": {
+    "chooseSeason": "Choose semester",
+    "chooseYear": "Choose academic year",
+    "chooseRate": "Choose rate",
+    "chooseDeparment": "Choose department",
+    "FallSemester": "Fall semester",
+    "SpringSemester": "Spring semester",
+    "SummerSemester": "Summer semester",
+    "rate1": "1-rate",
+    "rate2": "2-rate",
+    "rate3": "3-rate",
+    "rate4": "4-rate",
+    "rate5": "5-rate",
+    "rate6": "6-rate",
+    "noKafedra": "Any department"
+  },
+  "head": {
+    "appTitle": "Administrative services AVN UMK",
+    "menu": "Menu",
+    "login": "Authentication",
+    "umk": "Report",
+    "view": "View"
+  }
+}

@@ -68,3 +68,16 @@ IIS настройка
                 <span class="title__box">УМК по кафедрам</span>
             </a>
         </div> 
+
+
+Перевод файлы
+
+Общие
+public/kg/cm.json
+public/ru/cm.json
+public/en/cm.json
+
+УМК
+public/kg/umk.json
+public/ru/umk.json
+public/en/umk.json
